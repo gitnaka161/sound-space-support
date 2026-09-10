@@ -1,259 +1,379 @@
 <!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SoundSpace 開発ストーリー — 測って捨てながら作る</title>
-  <meta name="description" content="Macを持たずにiPhoneアプリを作り、App Storeの審査を3回落ちて公開するまで。40Hzの聴覚刺激と瞑想音楽を混ぜないと決めた理由を、実測値とともに記録します。">
-  <link rel="stylesheet" href="styles.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suno AI × Claude Code × Codexで「SOUND SPACE」をApp Storeへ</title>
+<meta name="description" content="はじめてのiOSアプリ開発。Macを持たないまま、音源をSuno AIで作り、実装をClaude CodeとCodexで進め、App Storeの審査に3回落ちて公開するまでの記録です。">
+<style>
+:root{
+  --night:#0b1114; --teal:#2b5561;
+  --paper:#f7f5ef; --panel:#fffdf8; --ink:#1d2529; --muted:#5f6b70;
+  --line:#ddd7c9; --gold:#9c7c25; --gold-light:#e6cf88; --warn:#8a4a34;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; color:var(--ink);
+  background:radial-gradient(circle at 12% 2%,rgba(43,85,97,.10),transparent 24rem),
+             radial-gradient(circle at 90% 14%,rgba(156,124,37,.10),transparent 26rem),
+             var(--paper);
+  font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+  line-height:1.95;
+}
+a{color:var(--gold); text-underline-offset:3px}
+
+.masthead{position:relative; overflow:hidden; color:#f3efe4;
+  background:linear-gradient(120deg,rgba(11,17,20,.98),rgba(43,85,97,.92)),
+             repeating-linear-gradient(45deg,transparent 0 18px,rgba(255,255,255,.025) 18px 19px);
+  border-bottom:1px solid rgba(230,207,136,.45)}
+.masthead::after{content:""; position:absolute; width:26rem; height:26rem; right:-10rem; top:-13rem;
+  border:1px solid rgba(230,207,136,.26); border-radius:50%;
+  box-shadow:0 0 0 3rem rgba(230,207,136,.035),0 0 0 7rem rgba(230,207,136,.02)}
+.masthead-inner{position:relative; z-index:1; max-width:1120px; margin:0 auto; padding:26px 24px 70px}
+.back{font-family:"Hiragino Sans","Yu Gothic",sans-serif; font-size:.82rem; color:#cfe0e4}
+.eyebrow{margin:70px 0 14px; color:var(--gold-light);
+  font-family:Georgia,"Times New Roman",serif; font-size:.78rem; letter-spacing:.22em; text-transform:uppercase}
+h1{max-width:920px; margin:0; font-size:clamp(2rem,5.6vw,4.3rem); font-weight:500; letter-spacing:-.04em; line-height:1.25}
+.lead{max-width:720px; margin:26px 0 0; color:#dfe7e8;
+  font-family:"Hiragino Sans","Yu Gothic",sans-serif; font-size:1rem; line-height:1.85}
+.tags{display:flex; flex-wrap:wrap; gap:10px; margin-top:30px}
+.tags span{border:1px solid rgba(230,207,136,.42); border-radius:999px; padding:7px 15px;
+  font-family:"Hiragino Sans","Yu Gothic",sans-serif; font-size:.8rem; color:#ecdfc2}
+
+.layout{display:grid; grid-template-columns:minmax(0,760px) 250px; gap:44px;
+  max-width:1120px; margin:-26px auto 0; padding:0 24px 90px; align-items:start}
+.toc{position:sticky; top:24px; margin-top:54px; padding:20px; color:var(--muted);
+  background:rgba(255,253,248,.82); border:1px solid var(--line); border-radius:18px;
+  backdrop-filter:blur(12px); font-family:"Hiragino Sans","Yu Gothic",sans-serif; font-size:.84rem; line-height:1.75}
+.toc strong{display:block; margin-bottom:10px; color:var(--teal); font-size:.78rem; letter-spacing:.12em}
+.toc a{display:block; padding:3px 0; color:var(--muted); text-decoration:none}
+.toc a:hover{color:var(--gold)}
+
+.article{background:var(--panel); border:1px solid var(--line); border-radius:20px; padding:8px 40px 48px; margin-top:54px}
+.article h2{margin:2.7em 0 .9em; padding-bottom:.45em; color:var(--teal); border-bottom:1px solid var(--line);
+  font-size:clamp(1.4rem,3.4vw,1.9rem); font-weight:600; line-height:1.45; scroll-margin-top:20px}
+.article h2:first-of-type{margin-top:1.6em}
+.article h3{margin:2em 0 .6em; color:var(--ink); font-size:1.1rem; font-weight:600}
+.article p,.article li{font-family:"Hiragino Sans","Yu Gothic",sans-serif; font-size:.95rem; line-height:1.95; color:#2c363a}
+.article ul{padding-left:1.35em}
+.article li{margin:.5em 0}
+.article strong{color:var(--ink); font-weight:600}
+.article blockquote{margin:1.6rem 0; padding:16px 20px; background:#f3efe2; border-left:3px solid var(--gold); border-radius:0 10px 10px 0}
+.article blockquote p{margin:0; color:#4a3f2a}
+.article code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.86em;
+  background:#f0ece0; border:1px solid var(--line); border-radius:4px; padding:1px 5px}
+.article table{display:block; width:100%; overflow-x:auto; margin:1.6rem 0; border-collapse:collapse;
+  font-family:"Hiragino Sans","Yu Gothic",sans-serif; font-size:.88rem}
+.article th,.article td{padding:10px 13px; border:1px solid var(--line); text-align:left; vertical-align:top; line-height:1.75}
+.article th{color:#2c4a53; background:#e9efee; font-weight:600; white-space:nowrap}
+.callout{margin:1.7rem 0; padding:18px 22px; background:#fbf6ea; border:1px solid #e3d5ae; border-radius:12px}
+.callout p{margin:0}
+.callout .label{display:block; margin-bottom:6px; color:var(--warn); font-size:.78rem; letter-spacing:.1em; font-weight:600}
+figure{margin:1.9rem 0}
+figure svg{width:100%; height:auto; display:block; background:#fbfaf5; border:1px solid var(--line); border-radius:12px}
+figcaption{margin-top:10px; color:var(--muted); font-family:"Hiragino Sans","Yu Gothic",sans-serif; font-size:.82rem; line-height:1.7}
+
+footer{padding:40px 24px; color:#c3d2d6; text-align:center; background:var(--night);
+  font-family:"Hiragino Sans","Yu Gothic",sans-serif; font-size:.82rem}
+footer a{color:var(--gold-light)}
+
+@media (max-width:960px){
+  .layout{grid-template-columns:minmax(0,1fr); gap:0}
+  .toc{position:static; margin:34px 0 0; order:2}
+  .article{order:1; padding:8px 24px 40px}
+}
+@media (max-width:540px){
+  .masthead-inner{padding:22px 18px 54px}
+  .eyebrow{margin-top:44px}
+  .layout{padding:0 18px 60px}
+  .article{padding:8px 18px 34px; border-radius:14px}
+}
+</style>
 </head>
 <body>
-<main>
-  <h1>測って捨てながら作る</h1>
-  <p class="lead">SoundSpace の設計と開発ワークフロー。Macを持たずにiPhoneアプリを作り、App Storeの審査を3回落ちて公開するまでの記録です。</p>
-  <p class="meta">2026年9月10日 · <a href="./">サポートへ戻る</a></p>
 
-  <div class="lede">
-    <p>音のアプリを作っていて一番多かった作業は、実装ではなく「作ったものを測って捨てる」ことでした。良さそうに思えた案が、測ってみると成立していない。この記事はその記録です。</p>
+<header class="masthead">
+  <div class="masthead-inner">
+    <p class="back"><a href="./">← SOUND SPACE サポート</a></p>
+    <p class="eyebrow">Product Story / 2026</p>
+    <h1>Suno AI × Claude Code × Codexで「SOUND SPACE」をApp Storeへ</h1>
+    <p class="lead">はじめてのiOSアプリ開発です。Macを1台も持たないまま、音源をSuno AIで作り、実装をClaude CodeとCodexで進め、App Storeの審査に3回落ちてから公開するまでの記録です。</p>
+    <div class="tags">
+      <span>WKWebView</span><span>StoreKit 2</span><span>Suno AI</span><span>GitHub Actions</span><span>Claude Code × Codex</span>
+    </div>
   </div>
+</header>
 
-  <h2>前提: 今回作ったもの</h2>
-  <p>SoundSpace は、40Hzの聴覚刺激と瞑想音楽を、<strong>意図的に混ぜずに</strong>提供するiPhoneアプリです。iOSネイティブのアプリですが、画面はWKWebViewに静的HTMLを載せた構成で、音の再生と課金だけをSwiftが担います。</p>
-  <p>サーバーはありません。BGM 20曲と環境音7層、合わせて92MBの音源をすべてアプリに同梱しているので、機内モードでも全機能が動きます。通信を必要とする箇所が一つもないため、アカウント登録もありません。</p>
+<div class="layout">
+  <article class="article">
 
-  <h2>この技術構成を選んだ理由</h2>
-  <p>もともとPWA（ブラウザで動くWebアプリ）として作っていました。ネイティブ化した理由は2つです。</p>
-  <p>1つ目は<strong>iOSのPWAは画面ロックで音が止まる</strong>ことです。瞑想や作業中の利用を想定したアプリで、画面を消すと音が消えるのは致命的でした。ネイティブなら <code>UIBackgroundModes: audio</code> が使えます。</p>
-  <p>2つ目は課金です。<strong>StoreKit 2 は端末内で購入を検証できる</strong>ので、サーバーを持たずに課金が成立します。<code>Transaction.currentEntitlements</code> と <code>Transaction.updates</code> を購読しておけば、解約・返金・家族共有のように購入操作を経ずに権利が変わった場合も反映されます。「バックエンドを持たない」という前提を壊さずに有料機能を作れました。</p>
-  <p>画面をWebViewのままにしたのは、音の生成と解析のロジックがすでにJavaScriptで書けていて、それをSwiftへ移植すると<strong>実測で担保している値を作り直すことになる</strong>と判断したからです。生成はJS、再生はネイティブ、と役割を分けました。</p>
+    <h2 id="s1">はじめに — iOSは初めてでした</h2>
+    <p>エンジニアではありますが、iOSアプリを作ったことは一度もありませんでした。開発機はWindowsで、Macは持っていません。Xcodeも触ったことがない状態からのスタートです。</p>
+    <p>その状態で、音を扱うアプリをApp Storeに公開しました。<strong>審査は3回落ちています。</strong>この記事は、何を作り、何を作ってから捨て、どこでつまずいたかの記録です。</p>
+    <div class="callout">
+      <span class="label">この記事で書かないこと</span>
+      <p>効果や効能の話は書きません。このアプリが約束できるのは「出している音の仕様が正しいこと」だけで、それ以上は測っていないからです。理由は<a href="#s11">日本市場の法規制</a>の節で説明します。</p>
+    </div>
 
-  <h2>解決したい課題</h2>
-  <p>「40Hz」を掲げた音源はすでに大量にあります。しかしその多くが<strong>バイノーラルビート</strong>という方式です。左右の耳にわずかに違う周波数を流し、その差をうなりとして知覚させる方式です。</p>
-  <p>ここに問題があります。<strong>左右の周波数差は30Hzを超えると、うなりとして知覚されにくくなります。</strong>つまり40Hzでは方式として成立しにくい。40Hzの聴覚刺激を扱う研究で一貫して使われてきたのは、音そのものを毎秒40回強弱させる<strong>振幅変調（アイソクロニック）</strong>です。</p>
-  <p>そして利用者には、手元の音源がどちらの方式なのか、本当に主張どおりの刺激を含んでいるのかを確かめる手段がありません。ここを埋めるのがこのアプリの出発点でした。</p>
+    <h2 id="s2">何を作ったか</h2>
+    <p>SOUND SPACE は、40Hzの聴覚刺激と瞑想音楽を、<strong>意図的に混ぜずに</strong>提供するiPhoneアプリです。</p>
+    <p>サーバーはありません。BGM 20曲と環境音7層、合わせて92MBの音源をすべてアプリに同梱しているので、機内モードでも全機能が動きます。通信を必要とする箇所が一つもないため、アカウント登録もありません。</p>
+    <table>
+      <tr><th>タブ</th><th>役割</th></tr>
+      <tr><td>瞑想</td><td>BGMを選び、音色と環境音を重ね、時間を決めて始める</td></tr>
+      <tr><td>Gamma</td><td>40Hz刺激ツール。<strong>音楽とは経路が分かれている</strong></td></tr>
+      <tr><td>詳細</td><td>周波数・音量・レイヤーの調整</td></tr>
+      <tr><td>RECORD</td><td>連続日数と履歴</td></tr>
+      <tr><td>CHECK</td><td>手元の音声ファイルの変調を測る</td></tr>
+    </table>
 
-  <h2>対象ユーザー</h2>
-  <table>
-    <tr><th>想定する人</th><th>使い方</th></tr>
-    <tr><td>作業や読書のあいだ、一定の聴覚刺激を流しておきたい人</td><td>Gamma 40 を独立したツールとして流す</td></tr>
-    <tr><td>瞑想音楽を聴きたい人</td><td>BGMを選び、必要な環境音だけ重ねる</td></tr>
-    <tr><td>手元の音源の仕様を確かめたい人</td><td>CHECKタブに音声ファイルを渡して測る</td></tr>
-  </table>
-  <p>効果を求める人に向けたアプリではありません。<strong>このアプリが約束できるのは「出している音の仕様が正しいこと」だけです。</strong></p>
+    <h2 id="s3">解決したい課題</h2>
+    <p>「40Hz」を掲げた音源はすでに大量にあります。しかしその多くが<strong>バイノーラルビート</strong>という方式です。左右の耳にわずかに違う周波数を流し、その差をうなりとして知覚させる方式です。</p>
+    <p>ここに問題があります。<strong>左右の周波数差は30Hzを超えると、うなりとして知覚されにくくなります。</strong>つまり40Hzでは方式として成立しにくい。40Hzの聴覚刺激を扱う研究で使われてきたのは、音そのものを毎秒40回強弱させる<strong>振幅変調（アイソクロニック）</strong>のほうです。</p>
+    <p>そして利用者には、手元の音源がどちらの方式なのか、本当に主張どおりの刺激を含んでいるのかを確かめる手段がありません。ここを埋めるのが出発点でした。</p>
 
-  <h2>主な機能</h2>
-  <table>
-    <tr><th>無料</th><th>SoundSpace Plus（月額480円 / 年額3,600円）</th></tr>
-    <tr><td>各カテゴリ1曲、雨、波、うなり、Gamma 40、基本プリセット</td><td>全20曲と今後追加される楽曲、川・森・焚き火・シンギングボウル・約528Hzチャイム、周波数や音量の詳細調整、プリセットの無制限保存</td></tr>
-  </table>
-  <p>Gamma 40 を無料側に置いたのは意図的です。この刺激の仕様が正確であることがアプリの主張の中核なので、そこを有料にすると、無料版が「ただの音」になってしまいます。</p>
+    <h2 id="s4">なぜネイティブアプリにしたか</h2>
+    <p>もともとPWA（ブラウザで動くWebアプリ）として作っていました。ネイティブ化した理由は2つです。</p>
+    <p>1つ目は<strong>iOSのPWAは画面ロックで音が止まる</strong>ことです。瞑想や作業中に使うアプリで、画面を消すと音が消えるのは致命的でした。ネイティブなら <code>UIBackgroundModes: audio</code> が使えます。</p>
+    <p>2つ目は課金です。<strong>StoreKit 2 は端末内で購入を検証できる</strong>ので、サーバーを持たずに課金が成立します。解約・返金・家族共有のように購入操作を経ずに権利が変わった場合も、購読しておけば反映されます。「バックエンドを持たない」という前提を壊さずに有料機能を作れました。</p>
+    <p>画面はWKWebViewに静的HTMLを載せたままにしました。音の生成と解析のロジックがすでにJavaScriptで書けていて、Swiftへ移植すると<strong>実測で担保している値を作り直すことになる</strong>と判断したためです。生成はJavaScript、再生はネイティブ、と役割を分けています。</p>
 
-  <h2>情報設計</h2>
-  <table>
-    <tr><th>タブ</th><th>役割</th></tr>
-    <tr><td>瞑想</td><td>BGMを選び、音色と環境音を重ね、時間を決めて始める</td></tr>
-    <tr><td>Gamma</td><td>40Hz刺激ツール。<strong>音楽とは経路が分かれている</strong></td></tr>
-    <tr><td>詳細</td><td>周波数・音量・レイヤーの調整（Plus）</td></tr>
-    <tr><td>RECORD</td><td>連続日数と履歴</td></tr>
-    <tr><td>CHECK</td><td>手元の音声ファイルの変調を測る</td></tr>
-  </table>
-  <p>この構成で一番重要なのは、<strong>Gamma を音楽から独立したタブに置いた</strong>ことです。理由は次の節にあります。</p>
+    <h2 id="s5">音源をSuno AIで作る</h2>
+    <p>BGM 20曲は、すべて<strong>Suno AI</strong>で生成しました。有料プランの契約中に生成したものだけを本番に使っています。規約を確認したうえで、契約を維持し続ける判断をしました。</p>
+    <p>ここで一番の発見は、期待とは逆のものでした。</p>
+    <div class="callout">
+      <span class="label">測定結果</span>
+      <p><strong>プロンプトを変えても、出力はほとんど変わりませんでした。生成ごとの揺らぎのほうが、プロンプトの違いより大きかったのです。</strong></p>
+    </div>
+    <p>3種類のプロンプトで10曲を作って測ったところ、プロンプト間の差はごく小さく、<strong>同じプロンプトで作った曲どうしのばらつきのほうが、はるかに大きい</strong>という結果になりました。煌めきを求める語を足しても、高域はほとんど動きませんでした。</p>
+    <p>あとから分かった構造的な失敗もあります。<strong>煌めきを担う楽器（ボウル・鐘・チャイム）を全部禁止したまま、煌めきを求めていた</strong>のです。それらはアプリ側で別レイヤーとして重ねる設計だったので、プロンプトからは外していました。</p>
+    <p>結論として、生成の歩留まりはプロンプトでは上がりませんでした。<strong>数を作って、人が聴いて選ぶ</strong>しかありませんでした。採否は測定では決めず、実際に試聴した記録がないものは採用しない運用にしています。</p>
+    <p>なお収録BGMは、音質を優先して<strong>再圧縮も正規化もせず原音のまま再生</strong>しています。</p>
 
-  <h2>測って捨てた選択肢</h2>
-  <p>ここがこのアプリの設計の中心です。良さそうに見えて成立しなかった案を、順に記録します。</p>
+    <h2 id="s6">環境音は実録に置き換えた</h2>
+    <p>雨・波・川・森・焚き火は、最初は合成で作っていました。すべて捨てて、商用利用できるCC0のフィールドレコーディングに置き換えました。合成版は「それっぽい何か」で止まり、粒の密度・遠近・衝突面の響きが再現できなかったためです。</p>
+    <p>素材選びで学んだのは、<strong>スペクトルだけでは決まらない</strong>ということです。</p>
+    <p>ある森の素材は、全体を走査しても高域の成分がほとんど無く、入っていたのは低い唸りだけでした。どこを切り出しても葉擦れになりません。これは不採用にしました。</p>
+    <p>逆に、雨と川が聞き分けられないという問題は、スペクトルでは説明できませんでした。周波数の分布はほぼ同じで、差が出たのは<strong>時間構造</strong>のほうでした。粒立ちのない雨は、信号としては川と同じなのです。以降、素材はスペクトルと時間構造の両方で判定しています。</p>
 
-  <h3>音楽に40Hzの変調を掛ける</h3>
-  <p>最初に試した案です。瞑想BGMそのものを毎秒40回強弱させれば、音楽と刺激が一体になるはずでした。</p>
-  <p>結果は<strong>ザラつき</strong>でした。40Hzは聴覚の粗さ帯域（およそ15〜300Hz）に入るため、この速さで音量を上下させると、どんな音でも必ずガサガサした質感が出ます。パラメータを変えても回避できません。研究が音楽ではなく単純な音やクリックを使ってきたのは、おそらくこの理由です。</p>
+    <h2 id="s7">作ってから捨てた3つの案</h2>
+    <p>このアプリの設計は、良さそうに見えて成立しなかった案を捨てた結果です。</p>
 
-  <h3>変調していない音楽を、刺激の横に並べる</h3>
-  <p>次に、刺激は刺激として鳴らし、音楽は加工せず横に置く案を試しました。これも却下です。</p>
-  <p>2つの理由がありました。1つは聴感で、<strong>脈打つ音が音楽の中の異物として残る</strong>こと。もう1つは測定で分かったことです。</p>
-  <p><strong>変調していない音を隣に置くと、変調の谷が埋まります。</strong>音楽を70%の音量で混ぜたところ、実効的な変調深度は100%から26%まで落ち、アプリ自身の検出器ですら40Hzを検出できなくなりました。刺激として数えたい音は、すべて変調段を通す必要がある——これは測って初めて分かったことです。</p>
-  <p>この2つを捨てた結果、<strong>「刺激と音楽は混ぜない。経路ごと分ける」</strong>という現在の設計になりました。</p>
+    <h3>1. 音楽に40Hzの変調を掛ける</h3>
+    <p>最初の案です。瞑想BGMそのものを毎秒40回強弱させれば、音楽と刺激が一体になるはずでした。</p>
+    <p>結果は<strong>ザラつき</strong>でした。40Hzは聴覚の粗さ帯域に入るため、この速さで音量を上下させると、どんな音でも必ずガサガサした質感が出ます。パラメータを変えても回避できません。研究が音楽ではなく単純な音やクリックを使ってきたのは、おそらくこの理由です。</p>
 
-  <h3>強度プリセットを持たせる</h3>
-  <p>「やさしい・標準・はっきり」の3段階を用意していました。これも削除しました。</p>
-  <p>採用した音源が<strong>完全に断続する波形（深度100%）</strong>だったため、そこから浅い変調を作ることができません。選べないものを選べるように見せることになるので、操作そのものを消しました。現在変えられるのは<strong>再生時間と全体音量だけ</strong>です。</p>
+    <h3>2. 変調していない音楽を、刺激の横に並べる</h3>
+    <p>次に、刺激は刺激として鳴らし、音楽は加工せず横に置く案を試しました。聴くと<strong>脈打つ音が音楽の中の異物として残り</strong>、これも却下です。</p>
+    <p>さらに測定で分かったことがありました。<strong>変調していない音を隣に置くと、変調の谷が埋まります。</strong>音楽を7割ほどの音量で混ぜると、実効的な変調深度は100%から26%まで落ち、アプリ自身の検出器ですら40Hzを検出できなくなりました。</p>
+    <p>この2つを捨てた結果、<strong>「刺激と音楽は混ぜない。経路ごと分ける」</strong>という現在の設計になりました。Gammaを独立したタブに置いているのはそのためです。</p>
 
-  <h2>測って決めたこと</h2>
-  <p>同梱しているGamma 40の音源は、次の値で固定されています。すべて実測値です。</p>
-  <table>
-    <tr><th>指標</th><th>実測値</th></tr>
-    <tr><td>変調周波数</td><td>39.999 Hz</td></tr>
-    <tr><td>変調深度</td><td>100.0%</td></tr>
-    <tr><td>ループ長</td><td>177.754444 秒（7,110周期）</td></tr>
-    <tr><td>ピーク</td><td>0.9624</td></tr>
-    <tr><td>継ぎ目の段差</td><td>0.003510（隣接サンプル差の78.2%点）</td></tr>
-  </table>
-  <p>ループ長が中途半端な小数なのは、<strong>変調周期の整数倍に合わせている</strong>からです。39.999Hzで7,110周期。ここがずれると、ループの折り返しで位相が飛びます。</p>
+    <h3>3. 強度プリセットを持たせる</h3>
+    <p>「やさしい・標準・はっきり」の3段階を用意していましたが、削除しました。採用した音源が<strong>完全に断続する波形</strong>だったため、そこから浅い変調を作れません。選べないものを選べるように見せることになるので、操作自体を消しました。現在変えられるのは再生時間と全体音量だけです。</p>
 
-  <h3>ループの継ぎ目で鳴るクリック音</h3>
-  <p>環境音でつまずいた話です。クリスタルボウルの音源が、57秒ごとに小さく「チッ」と鳴りました。</p>
-  <p>ループの作り方自体は正しく、符号化前のPCMは問題ありません。壊していたのは<strong>AAC符号化</strong>でした。ファイルの両端に、ランプ状の再構成誤差が出ていました。先頭の実測誤差はピークの17%に達していました。</p>
-  <p>効かなかった対策を先に書きます。<strong>ビットレートを上げても（96k→320k）、クロスフェードを伸ばしても（3秒→20秒）、末尾のパディングを切り詰めても、継ぎ目の順位は最悪のまま変わりませんでした。</strong></p>
-  <p>効いたのは、<strong>符号化する前に両端を5ミリ秒で無音へ落とすこと</strong>でした。それだけで段差が0.079から0.00068へ、順位が100%点から9.1%点へ改善しました。全層に適用した結果です。</p>
-  <table>
-    <tr><th>層</th><th>処理前</th><th>処理後</th></tr>
-    <tr><td>シンギングボウル</td><td>100.00%</td><td>9.11%</td></tr>
-    <tr><td>波</td><td>87.60%</td><td>5.41%</td></tr>
-    <tr><td>焚き火</td><td>95.83%</td><td>31.87%</td></tr>
-  </table>
-  <p>なお20ミリ秒以上にすると継ぎ目に谷ができるので、伸ばしてはいけません。</p>
+    <h2 id="s8">固定した音源と、測っている値</h2>
+    <p>同梱しているGamma 40の音源は、次の値で固定しています。</p>
+    <table>
+      <tr><th>指標</th><th>実測値</th></tr>
+      <tr><td>変調周波数</td><td>39.999 Hz</td></tr>
+      <tr><td>変調深度</td><td>100.0%</td></tr>
+      <tr><td>ループ長</td><td>177.75 秒（変調周期の整数倍）</td></tr>
+    </table>
+    <p>ループ長が中途半端な小数なのは、変調周期の整数倍に合わせているからです。ここがずれると、ループの折り返しで位相が飛びます。</p>
+    <p>環境音でもつまずきました。シンギングボウルの音源が、ループの継ぎ目で小さく「チッ」と鳴ったのです。ループの作り方自体は正しく、壊していたのは<strong>AAC符号化</strong>で、ファイルの両端に誤差が出ていました。</p>
+    <p>効かなかった対策を先に書きます。<strong>ビットレートを上げても、クロスフェードを伸ばしても、末尾を切り詰めても、継ぎ目は直りませんでした。</strong>効いたのは、符号化する前に<strong>両端を数ミリ秒で無音へ落とすこと</strong>だけでした。</p>
 
-  <h3>素材の良し悪しは、スペクトルだけでは決まらない</h3>
-  <p>環境音は合成をやめ、すべて実録のCC0素材に置き換えました。合成版は「それっぽい何か」で止まり、粒の密度や遠近が再現できないと判断したためです。</p>
-  <p>そのうえで、<strong>森の素材を1つ不採用にしました。</strong>158秒を10秒刻みで走査したところ、2〜8kHzの成分が最大1.47%しかなく、スペクトル重心も最高226Hzでした。葉擦れの音なら2〜8kHzが数十%を占め、重心は2,000Hzを超えます。入っていたのは低い唸りだけで、どこを切り出しても葉になりませんでした。</p>
-  <p>逆に、雨と川が聞き分けられないという問題は、スペクトルでは説明できませんでした。重心は2,070Hzと1,915Hzでほぼ同じです。差が出たのは<strong>時間構造</strong>で、雨の包絡線の変動係数は0.24（全音源で最も定常）、粒の検出は毎秒0.0回でした。<strong>粒立ちのない雨は、信号としては川と同じです。</strong>以降、素材はスペクトルと時間構造の両方で判定しています。</p>
+    <h2 id="s9">CHECKタブ — 鳴らすのではなく測る</h2>
+    <p>手元の音声ファイルを渡すと、変調周波数、変調深度、左右の周波数差を数値で返します。左右差を見るので、アイソクロニックとバイノーラルの<strong>方式の判別</strong>もできます。他社の音源でも構いません。</p>
+    <p>この機能は、素朴な実装を捨てたうえで成立しています。たとえばモノラルに合成してから解析すると、<strong>バイノーラル素材がアイソクロニックと誤判定されます。</strong>左右の音を足すと、和の中に本物のうなりが生じてしまうためです。左右は別々に解析する必要がありました。</p>
+    <p>同じように、全帯域をまとめて見ると、倍音どうしのうなりを意図的な変調と誤判定します。帯域を分けて、全帯域に存在することを要求する形にしています。</p>
+    <p>検出の限界も測って決め、画面に書いてあります。深度20%以上は確実に検出、10%前後は音楽自体のうねりと区別がつききらないため「弱い」と表示、5%以下は検出できません。</p>
 
-  <h2>CHECKタブ — 鳴らすのではなく測る</h2>
-  <p>手元の音声ファイル（mp3 / m4a / wav）を渡すと、変調周波数、変調深度、ピーク明瞭度、左右の周波数差、照合した帯域を数値で返します。左右差を見るので、アイソクロニックとバイノーラルの<strong>方式の判別</strong>もできます。</p>
-  <p>この機能は、素朴な実装を3つ捨てたうえで成立しています。</p>
-  <table>
-    <tr><th>捨てた実装</th><th>何が起きたか</th></tr>
-    <tr><td>モノラルに合成してから解析する</td><td>バイノーラル素材が「アイソクロニック」と誤判定される。左197Hzと右203Hzを足すと、和の中に本物の6Hzのうなりが生じるため。<strong>左右を別に解析する</strong></td></tr>
-    <tr><td>全帯域で1つの包絡線スペクトルを取る</td><td>2つの倍音どうしのうなりを、意図的な変調と誤判定する。136.1Hzと181.5Hzが「強い45.4Hzの刺激」に見える。<strong>帯域を分け、全帯域に存在することを要求する</strong></td></tr>
-    <tr><td>1次フィルタの縦続で帯域を分け、幾何平均で束ねる</td><td>漏れが大きすぎ、かつ1帯域にしかない成分を通してしまう。<strong>FFTのビンをゼロ化した解析信号を使い、帯域はビンごとの最小値で結合する</strong></td></tr>
-  </table>
-  <p>検出の限界も測って決め、画面に書いてあります。深度20%以上は確実に検出、10%前後は音楽自体のうねりと区別がつききらないため「弱い」と表示、5%以下は検出できません。</p>
+    <h2 id="s10">無料とPlusの線引き</h2>
+    <p>ここは長く迷いました。結論はこうです。</p>
+    <blockquote><p>装置は無料で配る。音楽と快適さでお金をいただく。</p></blockquote>
+    <p>このアプリが既存の40Hz動画に対して持っている強みは、<strong>刺激の仕様が正確で、それを利用者自身が検証できること</strong>の一点です。ここを有料にすると、無料版は「よくある音」になり、獲得経路が消えてしまいます。逆にここを無料で開ければ、無料版そのものが「本物である」証明になります。</p>
+    <p>課金の根拠はコスト構造とも一致しました。合成音の配信コストはゼロですが、<strong>BGMだけがSuno AIの月額という実費を伴います。</strong>「毎月曲が増える」は月額課金を説明できる数少ない正当な理由です。</p>
+    <table>
+      <tr><th>無料</th><th>SOUND SPACE Plus（月額480円 / 年額3,600円）</th></tr>
+      <tr><td>Gamma 40（時間無制限）、CHECKタブ全機能、各カテゴリ1曲、雨、波、うなり、記録</td><td>全20曲と今後追加される楽曲、川・森・焚き火・シンギングボウル・約528Hzチャイム、詳細調整、プリセットの無制限保存</td></tr>
+    </table>
+    <p>音楽を完全に閉じないことも意図的です。無料版が「合成音だけ鳴るアプリ」だと、利用者は自分が何を買おうとしているのか分からないまま判断することになります。<strong>無料で数曲聴けて「これがあと16曲、毎月増える」と分かる状態</strong>がいちばん納得して買われる形だと考えました。</p>
 
-  <h2>技術構成</h2>
-  <table>
-    <tr><th>領域</th><th>採用したもの</th></tr>
-    <tr><td>画面</td><td>WKWebView ＋ 静的HTML / CSS / JavaScript（フレームワークなし、ビルド工程なし）</td></tr>
-    <tr><td>音の生成と解析</td><td>Web Audio API（<code>OfflineAudioContext</code> で書き出しも同じ経路）</td></tr>
-    <tr><td>音の再生</td><td>Swift の <code>AVAudioPlayer</code>。WKWebView の Web Audio が実機で無音になったため移行</td></tr>
-    <tr><td>オーディオセッション</td><td><code>AVAudioSession .playback</code>。既定の <code>ambient</code> はハードの消音スイッチで消える</td></tr>
-    <tr><td>課金</td><td>StoreKit 2（端末内検証、サーバーなし）</td></tr>
-    <tr><td>音源処理</td><td>Python ＋ numpy ＋ ffmpeg（highpass、正規化、ループ整形、測定）</td></tr>
-    <tr><td>プロジェクト生成</td><td>XcodeGen（<code>project.yml</code> から <code>.xcodeproj</code> を生成）</td></tr>
-    <tr><td>CI / 配布</td><td>GitHub Actions（macOSランナー）→ TestFlight</td></tr>
-  </table>
+    <h3>課金してはいけないもの</h3>
+    <p>線引きで一番重要だったのは、<strong>何を有料にしないか</strong>でした。</p>
+    <table>
+      <tr><th>有料にしないもの</th><th>理由</th></tr>
+      <tr><td><strong>精度</strong></td><td>「Plusだと正確な40Hz」は絶対にやりません。無料版が不正確だと自ら認めることになり、このアプリ唯一の主張が崩れます</td></tr>
+      <tr><td><strong>CHECKタブ</strong></td><td>検証機能を有料にすると「検証されたくない」と読まれます。信頼の証明そのものなので開けておきます</td></tr>
+      <tr><td><strong>広告</strong></td><td>瞑想アプリとして論外なだけでなく、<strong>実測上も破綻します</strong></td></tr>
+    </table>
+    <p>3つ目は補足が必要です。<a href="#s7">先ほどの測定</a>のとおり、変調されていない音を刺激の横に置くと谷が埋まります。広告音声はまさにそれで、鳴っているあいだ刺激が成立しません。広告は理念の問題ではなく、<strong>この製品では技術的に両立しない</strong>という話でした。</p>
 
-  <h2>Macを持たずにiPhoneアプリを出す</h2>
-  <p>開発機はWindowsです。iOSアプリはXcodeでしかビルドできず、XcodeはmacOSでしか動きません。この制約をどう回避したかが、開発フローの中心になりました。</p>
+    <h3>価格をどう決めたか</h3>
+    <p>買い切りは出していません。毎月BGMを足すという約束と両立しないためです。あとから追加はできますが、撤回はできません。</p>
+    <p>価格は市場相場の中に置きました。海外の主要アプリが年5,000〜6,500円、国内の瞑想アプリが月500〜980円という水準に対して、月480円・年3,600円です。Appleの手数料はSmall Business Programで15%。アプリ内課金はAppleが販売者になるため、決済・消費税・返金対応を自前で持たなくてよいのも、個人開発では大きい判断材料でした。</p>
 
-  <figure>
-    <svg viewBox="0 0 700 560" role="img" xmlns="http://www.w3.org/2000/svg">
-      <title>ビルドと公開の流れ</title>
-      <desc>Windows PCからGitHubへソースを送り、GitHub ActionsのmacOSマシンがXcodeでビルドし、App Store Connectへ一方向にアップロードされ、TestFlightとApp Reviewを経てApp Storeで公開される流れ。</desc>
-      <defs>
-        <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-          <path d="M2 1L8 5L2 9" fill="none" stroke="#aaa696" stroke-width="1.6" stroke-linecap="round"/>
-        </marker>
-      </defs>
-      <rect x="210" y="10" width="280" height="62" rx="4" fill="#151d21" stroke="#454f54"/>
-      <text x="350" y="36" text-anchor="middle" fill="#e8e3d4" font-size="15" font-family="sans-serif">Windows PC</text>
-      <text x="350" y="57" text-anchor="middle" fill="#aaa696" font-size="13" font-family="sans-serif">Xcode が動かない</text>
-      <line x1="350" y1="72" x2="350" y2="100" stroke="#aaa696" stroke-width="1.2" marker-end="url(#a)"/>
-      <rect x="210" y="100" width="280" height="62" rx="4" fill="#151d21" stroke="#454f54"/>
-      <text x="350" y="126" text-anchor="middle" fill="#e8e3d4" font-size="15" font-family="sans-serif">GitHub リポジトリ</text>
-      <text x="350" y="147" text-anchor="middle" fill="#aaa696" font-size="13" font-family="sans-serif">ソースコードの保管場所</text>
-      <line x1="350" y1="162" x2="350" y2="190" stroke="#aaa696" stroke-width="1.2" marker-end="url(#a)"/>
-      <rect x="210" y="190" width="280" height="62" rx="4" fill="#1c2226" stroke="#d6b64f"/>
-      <text x="350" y="216" text-anchor="middle" fill="#d6b64f" font-size="15" font-family="sans-serif">GitHub Actions（macOS）</text>
-      <text x="350" y="237" text-anchor="middle" fill="#aaa696" font-size="13" font-family="sans-serif">数分だけMacを借りてビルド</text>
-      <line x1="350" y1="252" x2="350" y2="280" stroke="#aaa696" stroke-width="1.2" marker-end="url(#a)"/>
-      <rect x="210" y="280" width="280" height="62" rx="4" fill="#151d21" stroke="#454f54"/>
-      <text x="350" y="306" text-anchor="middle" fill="#e8e3d4" font-size="15" font-family="sans-serif">App Store Connect</text>
-      <text x="350" y="327" text-anchor="middle" fill="#aaa696" font-size="13" font-family="sans-serif">ビルド置き場と審査窓口</text>
-      <path d="M350 342 V370 H175 V398" fill="none" stroke="#aaa696" stroke-width="1.2" marker-end="url(#a)"/>
-      <path d="M350 342 V370 H525 V398" fill="none" stroke="#aaa696" stroke-width="1.2" marker-end="url(#a)"/>
-      <rect x="40" y="398" width="270" height="62" rx="4" fill="#151d21" stroke="#454f54"/>
-      <text x="175" y="424" text-anchor="middle" fill="#e8e3d4" font-size="15" font-family="sans-serif">TestFlight</text>
-      <text x="175" y="445" text-anchor="middle" fill="#aaa696" font-size="13" font-family="sans-serif">実機で確認・画面収録</text>
-      <rect x="390" y="398" width="270" height="62" rx="4" fill="#151d21" stroke="#454f54"/>
-      <text x="525" y="424" text-anchor="middle" fill="#e8e3d4" font-size="15" font-family="sans-serif">App Review</text>
-      <text x="525" y="445" text-anchor="middle" fill="#aaa696" font-size="13" font-family="sans-serif">審査員が実機で確認</text>
-      <line x1="525" y1="460" x2="525" y2="488" stroke="#aaa696" stroke-width="1.2" marker-end="url(#a)"/>
-      <rect x="390" y="488" width="270" height="62" rx="4" fill="#151d21" stroke="#454f54"/>
-      <text x="525" y="514" text-anchor="middle" fill="#e8e3d4" font-size="15" font-family="sans-serif">App Store で公開</text>
-      <text x="525" y="535" text-anchor="middle" fill="#aaa696" font-size="13" font-family="sans-serif">利用者がダウンロード</text>
-    </svg>
-    <figcaption>矢印は一方向です。App Store Connect から GitHub を見に来ることはありません。ビルドしたファイルを GitHub 側から App Store Connect API へ送りつけています。</figcaption>
-  </figure>
+    <h2 id="s11">日本市場の法規制</h2>
+    <p>ここは<strong>無料で配るのと、お金を取るのとで、表現に対する法的な厳しさが変わります。</strong>有料化にあたって最初に潰したリスクでした。</p>
+    <table>
+      <tr><th>法令・規定</th><th>何が禁じられるか</th></tr>
+      <tr><td>薬機法</td><td>医療機器の承認を受けていない製品が、疾病の治療・予防・身体機能への影響をうたうこと。「認知症予防」「脳を活性化」「不眠が治る」はすべて不可</td></tr>
+      <tr><td>景品表示法</td><td>根拠のない優良誤認表示。有料である以上こちらも直撃します</td></tr>
+      <tr><td>App Store Guideline 1.4.1</td><td>医療情報を扱うアプリは審査が厳しくなります</td></tr>
+    </table>
+    <p>難しいのは、<strong>研究の引用も、効果を示唆する文脈で使えば同じ扱いになりうる</strong>点です。「この方式は研究で使われてきた」とは書けても、「だから効果がある」とは書けません。<strong>方式の一致を述べることと、効果を主張することの区別</strong>が、この製品の表現すべての土台になっています。</p>
+    <blockquote>
+      <p>◯ 39.999Hz、変調深度100.0%で鳴っています。その値はアプリ自身で測って表示しています<br>
+      × 40Hzのガンマ波が認知機能を改善します</p>
+    </blockquote>
+    <p>この方針は機能にも及んでいます。<strong>効果の測定機能は実装していません。</strong>スマートフォンで測れるのは反応時間などの行動指標であって脳波ではなく、脳波を見るにはEEGが必要です。測れないものを測れるように見せないために、機能そのものを作りませんでした。</p>
 
-  <p>この構成には費用の落とし穴がありました。<strong>GitHub は macOS の実行時間を Linux の10倍で数えます。</strong>privateリポジトリの無料枠は月2,000分ですが、macOSだと6分のジョブで60分消費されるため、実質30回ほどのビルドで尽きます。</p>
-  <p>開発が集中した数日で枠を使い切り、審査対応が数日止まりました。原因は<strong>ソースを変更するたびに自動でビルドが走る設定</strong>にしていたことです。現在は手動実行のみに変え、ビルドは「出すとき」だけ回しています。</p>
-  <p>Xcode Cloud への移行も検討しましたが、<code>.xcodeproj</code> がリポジトリに必要で、この構成ではCIがXcodeGenで毎回生成しているため使えませんでした。</p>
+    <h2 id="s12">技術構成</h2>
+    <table>
+      <tr><th>領域</th><th>採用したもの</th></tr>
+      <tr><td>画面</td><td>WKWebView ＋ 静的HTML / CSS / JavaScript（フレームワークなし、ビルド工程なし）</td></tr>
+      <tr><td>音の生成と解析</td><td>Web Audio API</td></tr>
+      <tr><td>音の再生</td><td>Swift の <code>AVAudioPlayer</code>。WKWebViewのWeb Audioが実機で無音になったため移行</td></tr>
+      <tr><td>オーディオセッション</td><td><code>AVAudioSession .playback</code>。既定の <code>ambient</code> はハードの消音スイッチで消える</td></tr>
+      <tr><td>課金</td><td>StoreKit 2（端末内検証、サーバーなし）</td></tr>
+      <tr><td>音源の生成</td><td>Suno AI（有料プラン）</td></tr>
+      <tr><td>音源処理と測定</td><td>Python ＋ numpy ＋ ffmpeg</td></tr>
+      <tr><td>プロジェクト生成</td><td>XcodeGen（<code>project.yml</code> から <code>.xcodeproj</code> を生成）</td></tr>
+      <tr><td>CI / 配布</td><td>GitHub Actions（macOSランナー）→ TestFlight</td></tr>
+    </table>
 
-  <h2>開発ワークフローと役割分担</h2>
-  <p>実装と文章はAI（Claude Code と Codex）に、判断と実機確認は人が担当しました。</p>
-  <table>
-    <tr><th>担当</th><th>やったこと</th></tr>
-    <tr><td>人</td><td>音の採否を試聴で決める。実機での動作確認と画面収録。課金設定と支払い。公開の最終判断</td></tr>
-    <tr><td>AI</td><td>実装。音源の測定と処理。ストア掲載文。審査への返信。CIの整備</td></tr>
-  </table>
-  <p>この分担で外せなかったのが<strong>試聴</strong>です。測定値が良い音源が良い音とは限りませんでした。スペクトルも時間構造も基準を満たした素材が、聴くと「それっぽい何か」で止まっていたことが何度もありました。音楽の採否は測定では決まらないので、人が聴いて確認した記録を残さないと採用しない運用にしています。</p>
-  <p>もう一つ、AIに任せられなかったのが<strong>実機の画面収録</strong>です。App Review が要求したのは「実機で撮影した操作の録画」で、これはiPhoneを持っている人にしか作れません。</p>
+    <h2 id="s13">Macを持たずにiPhoneアプリを出す</h2>
+    <p>開発機はWindowsです。iOSアプリはXcodeでしかビルドできず、XcodeはmacOSでしか動きません。ここをどう回避したかが、開発フローの中心になりました。</p>
 
-  <h2>品質確認のワークフロー</h2>
-  <p>音のアプリで怖いのは「気づかないうちに音が変わっていること」です。次の3つで防いでいます。</p>
-  <table>
-    <tr><th>確認</th><th>内容</th></tr>
-    <tr><td>参照音源との照合</td><td>CHECKタブが、既知の変調を持つ校正用音源7本に対して7/7で一致すること</td></tr>
-    <tr><td>同梱音源の回帰</td><td>39.999Hz / 深度100.0% / 177.754444秒 / ピーク0.9624 / 継ぎ目0.003510 が変わっていないこと</td></tr>
-    <tr><td>CIでの申告検査</td><td>ビルドしたIPAの <code>UIDeviceFamily</code> を読み、対応デバイスの申告が意図どおりであること</td></tr>
-  </table>
-  <p>文言についても通し読みの工程を置いています。効能を示唆する表現がゼロであることの確認です。日本では薬機法と景品表示法に直接かかり、<strong>無料で配るのと有料で売るのとでは厳しさが変わります。</strong></p>
+    <figure>
+      <svg viewBox="0 0 700 566" role="img" xmlns="http://www.w3.org/2000/svg">
+        <title>ビルドと公開の流れ</title>
+        <desc>Windows PCからGitHubへソースを送り、GitHub ActionsのmacOSマシンがXcodeでビルドし、App Store Connectへ一方向にアップロードされ、TestFlightとApp Reviewを経てApp Storeで公開される流れ。</desc>
+        <defs>
+          <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="#5f6b70" stroke-width="1.6" stroke-linecap="round"/>
+          </marker>
+        </defs>
+        <rect x="210" y="14" width="280" height="60" rx="6" fill="#eef1ee" stroke="#c9c3b3"/>
+        <text x="350" y="39" text-anchor="middle" fill="#1d2529" font-size="15" font-family="sans-serif">Windows PC</text>
+        <text x="350" y="60" text-anchor="middle" fill="#5f6b70" font-size="13" font-family="sans-serif">Xcode が動かない</text>
+        <line x1="350" y1="74" x2="350" y2="102" stroke="#5f6b70" stroke-width="1.2" marker-end="url(#a)"/>
+        <rect x="210" y="102" width="280" height="60" rx="6" fill="#eef1ee" stroke="#c9c3b3"/>
+        <text x="350" y="127" text-anchor="middle" fill="#1d2529" font-size="15" font-family="sans-serif">GitHub リポジトリ</text>
+        <text x="350" y="148" text-anchor="middle" fill="#5f6b70" font-size="13" font-family="sans-serif">ソースコードの保管場所</text>
+        <line x1="350" y1="162" x2="350" y2="190" stroke="#5f6b70" stroke-width="1.2" marker-end="url(#a)"/>
+        <rect x="210" y="190" width="280" height="60" rx="6" fill="#fbf3dc" stroke="#9c7c25"/>
+        <text x="350" y="215" text-anchor="middle" fill="#6d5416" font-size="15" font-family="sans-serif">GitHub Actions（macOS）</text>
+        <text x="350" y="236" text-anchor="middle" fill="#7d6a3a" font-size="13" font-family="sans-serif">数分だけMacを借りてビルド</text>
+        <line x1="350" y1="250" x2="350" y2="278" stroke="#5f6b70" stroke-width="1.2" marker-end="url(#a)"/>
+        <rect x="210" y="278" width="280" height="60" rx="6" fill="#e9efee" stroke="#a8b8b8"/>
+        <text x="350" y="303" text-anchor="middle" fill="#1d2529" font-size="15" font-family="sans-serif">App Store Connect</text>
+        <text x="350" y="324" text-anchor="middle" fill="#5f6b70" font-size="13" font-family="sans-serif">ビルド置き場と審査窓口</text>
+        <path d="M350 338 V366 H175 V394" fill="none" stroke="#5f6b70" stroke-width="1.2" marker-end="url(#a)"/>
+        <path d="M350 338 V366 H525 V394" fill="none" stroke="#5f6b70" stroke-width="1.2" marker-end="url(#a)"/>
+        <rect x="40" y="394" width="270" height="60" rx="6" fill="#e9efee" stroke="#a8b8b8"/>
+        <text x="175" y="419" text-anchor="middle" fill="#1d2529" font-size="15" font-family="sans-serif">TestFlight</text>
+        <text x="175" y="440" text-anchor="middle" fill="#5f6b70" font-size="13" font-family="sans-serif">実機で確認・画面収録</text>
+        <rect x="390" y="394" width="270" height="60" rx="6" fill="#e9efee" stroke="#a8b8b8"/>
+        <text x="525" y="419" text-anchor="middle" fill="#1d2529" font-size="15" font-family="sans-serif">App Review</text>
+        <text x="525" y="440" text-anchor="middle" fill="#5f6b70" font-size="13" font-family="sans-serif">審査員が実機で確認</text>
+        <line x1="525" y1="454" x2="525" y2="482" stroke="#5f6b70" stroke-width="1.2" marker-end="url(#a)"/>
+        <rect x="390" y="482" width="270" height="60" rx="6" fill="#eef1ee" stroke="#c9c3b3"/>
+        <text x="525" y="507" text-anchor="middle" fill="#1d2529" font-size="15" font-family="sans-serif">App Store で公開</text>
+        <text x="525" y="528" text-anchor="middle" fill="#5f6b70" font-size="13" font-family="sans-serif">利用者がダウンロード</text>
+      </svg>
+      <figcaption>矢印は一方向です。App Store Connect から GitHub を見に来ることはありません。ビルドしたファイルを GitHub 側から App Store Connect の API へ送りつけています。</figcaption>
+    </figure>
 
-  <h2>App Store 審査の記録</h2>
-  <p>3回落ちました。順に記録します。</p>
+    <p>この構成には費用の落とし穴がありました。<strong>GitHubはmacOSの実行時間をLinuxの10倍で数えます。</strong>privateリポジトリの無料枠は月2,000分ですが、macOSだと6分のジョブで60分消費されるため、実質30回ほどのビルドで尽きます。</p>
+    <p>開発が集中した数日で枠を使い切り、審査対応が数日止まりました。原因は<strong>ソースを変更するたびに自動でビルドが走る設定</strong>にしていたことです。Webサービスなら妥当な設定ですが、iOSでは高すぎました。現在は手動実行のみに変え、ビルドは「出すとき」だけ回しています。</p>
 
-  <h3>1回目 — Guideline 2.1（情報要求）</h3>
-  <p>「審査履歴の浅いデベロッパアカウントからの提出なので、追加情報が必要」という定型の要求でした。内容を否定されたものではありません。</p>
-  <p>要求は7項目で、目的と対象、機能への導線、使用している外部サービス、地域差、第三者素材の権利、アプリ内購入の内容。そして<strong>実機で撮影した画面収録</strong>です。この収録が必須で、起動から通常の操作、購入画面までを含める必要がありました。</p>
+    <h2 id="s14">Claude Code と Codex の分担</h2>
+    <p>実装と文章はAIに、判断と実機確認は人が担当しました。2つのAIを併用したのは、片方が利用上限に達したときにもう片方が続けられるようにするためです。引き継ぎはリポジトリ内のドキュメントを介して行いました。</p>
+    <table>
+      <tr><th>担当</th><th>やったこと</th></tr>
+      <tr><td>人</td><td>音の採否を試聴で決める。実機での動作確認と画面収録。課金設定と支払い。公開の最終判断</td></tr>
+      <tr><td>AI</td><td>実装。音源の測定と処理。ストア掲載文。審査への返信。CIの整備。この記事の執筆</td></tr>
+    </table>
+    <p>この分担で外せなかったのが<strong>試聴</strong>です。測定値が基準を満たした素材が、聴くと使えないことが何度もありました。逆に、聴いて良いと思った音が測ると成立していないこともありました。<strong>音楽の採否は測定では決まりません。</strong></p>
+    <p>もう一つAIに任せられなかったのが<strong>実機の画面収録</strong>です。App Reviewが要求したのは「実機で撮影した操作の録画」で、これはiPhoneを持っている人にしか作れません。</p>
 
-  <h3>2回目 — Guideline 3.1.2(c)（サブスクリプションの表示）</h3>
-  <p>これは正当な指摘でした。購入画面が「7日間無料トライアル」と「¥3,600 / 年」を<strong>別々の要素として並べていただけ</strong>で、両者が繋がっていませんでした。条項の段落にも「期間終了の24時間前までに解約しない限り自動更新されます」とはありましたが、<strong>トライアルが終わった時点で課金が始まる</strong>とは書いていませんでした。</p>
-  <p>修正は、条件を1つの文にまとめることです。</p>
-  <blockquote>
-    <p>7日間の無料トライアル終了後、¥3,600 / 年が自動で請求されます</p>
-  </blockquote>
-  <p>あわせて、文言を焼き込むのをやめました。StoreKit が返す値——導入オファーの期間、支払い方式、そして<strong>その利用者がオファーの対象かどうか</strong>——から組み立てるようにしています。対象でない利用者にはトライアルの一文を出しません。受け取れないものを宣伝する状態が、構造的に起きない作りにしました。</p>
+    <h2 id="s15">審査に3回落ちた</h2>
 
-  <h3>3回目 — 承認</h3>
-  <p>4項目（アプリ本体、サブスクリプショングループ、月額、年額）すべてが承認されました。</p>
-  <p>なお、公開前に最も心配していたのは Guideline 4.3(b)、いわゆる<strong>市場の飽和</strong>による却下でした。条文は <code>sound effects</code> や <code>simple timers</code> を名指ししており、当初の掲載文は「環境音を重ねて時間を計るアプリ」に読める書き方でした。1行目を「40Hzの聴覚刺激と瞑想音楽を、意図的に混ぜずに提供するアプリです」に書き換えましたが、<strong>結果として4.3は一度も指摘されませんでした。</strong></p>
+    <h3>1回目 — Guideline 2.1（情報要求）</h3>
+    <p>「審査履歴の浅いデベロッパアカウントからの提出なので、追加情報が必要」という定型の要求でした。内容を否定されたものではありません。</p>
+    <p>要求は7項目。目的と対象、機能への導線、使用している外部サービス、地域差、第三者素材の権利、アプリ内購入の内容。そして<strong>実機で撮影した画面収録</strong>です。<strong>はじめての提出では、ここで一度止まると考えておいたほうがよさそうです。</strong>収録を先に用意しておけば1往復減ります。</p>
 
-  <h2>プライバシーと安全性の前提</h2>
-  <ul>
-    <li>アカウント登録・ログインがありません</li>
-    <li>実行時に外部サービスへ接続しません。データ提供者、認証、解析、広告、トラッキングのいずれも使っていません</li>
-    <li>音源はすべて同梱で、実行時に取得しません。機内モードで全機能が動きます</li>
-    <li>記録は端末内にのみ保存されます</li>
-    <li>音声処理と解析はすべて端末上で行われます。渡したファイルが送信されることはありません</li>
-    <li>環境音はすべてCC0素材で、出典URL・作者・ライセンス・原音のハッシュを記録し、アプリ内にも出典を表示しています</li>
-    <li>医療機器ではありません。診断・治療・予防・効果測定を目的としません</li>
-    <li>効果の測定機能は実装していません。スマートフォンで測れるのは反応時間などの行動指標で、脳波ではありません</li>
-  </ul>
-  <p>最後の項目について補足します。行動指標は日内変動が大きく、数十回の試行で出た差は練習効果か偶然です。<strong>測れないものを測れるように見せることはしない</strong>という方針で、機能そのものを作りませんでした。</p>
+    <h3>2回目 — Guideline 3.1.2(c)（サブスクリプションの表示）</h3>
+    <p>これは正当な指摘でした。購入画面が「7日間無料トライアル」と「¥3,600 / 年」を<strong>別々の要素として並べていただけ</strong>で、両者が繋がっていませんでした。条項には「解約しない限り自動更新されます」とありましたが、<strong>トライアルが終わった時点で課金が始まる</strong>とは書いていませんでした。</p>
+    <p>修正は、条件を1つの文にまとめることです。</p>
+    <blockquote><p>7日間の無料トライアル終了後、¥3,600 / 年が自動で請求されます</p></blockquote>
+    <p>あわせて、文言を焼き込むのをやめました。StoreKitが返す値——オファーの期間、支払い方式、そして<strong>その利用者がオファーの対象かどうか</strong>——から組み立てるようにしています。対象でない利用者にはトライアルの一文を出しません。受け取れないものを宣伝する状態が、構造的に起きない作りにしました。</p>
 
-  <h2>現在の公開状況</h2>
-  <table>
-    <tr><th>項目</th><th>状態</th></tr>
-    <tr><td>バージョン</td><td>1.0（ビルド16）</td></tr>
-    <tr><td>審査</td><td>2026年9月10日 承認</td></tr>
-    <tr><td>配信地域</td><td>日本のみ</td></tr>
-    <tr><td>対応デバイス</td><td>iPhone</td></tr>
-    <tr><td>収録音源</td><td>BGM 20曲、環境音7層（92MB）</td></tr>
-  </table>
+    <h3>3回目 — 承認</h3>
+    <p>アプリ本体、サブスクリプショングループ、月額、年額の4項目すべてが承認されました。</p>
+    <p>なお公開前に最も心配していたのは、Guideline 4.3(b)の<strong>市場の飽和</strong>による却下でした。条文は「効果音」や「単純なタイマー」を名指ししており、当初の掲載文は「環境音を重ねて時間を計るアプリ」に読める書き方でした。1行目を書き換えて臨みましたが、<strong>結果として4.3は一度も指摘されませんでした。</strong></p>
 
-  <h2>今後の開発計画</h2>
-  <ul>
-    <li><strong>ファイル選択の不具合の確認。</strong>CHECKタブと手持ち音源の読み込みで、iOSのファイル選択が通らない疑いがあります。修正はビルド16に入っていますが、実機での確認が残っています</li>
-    <li><strong>CHECKタブの掲載文への復帰。</strong>上が直っていれば、いったん外した記述を戻します。競合との差が最も出る機能です</li>
-    <li><strong>BGMの追加。</strong>Plus の説明に「今後追加される楽曲」と書いてあります。書いた以上は追加を続けます</li>
-    <li><strong>Linuxで回せる検査のCI化。</strong>音源の測定値が変わっていないかの回帰確認は、macOSを使わずに実行できます</li>
-  </ul>
+    <h2 id="s16">プライバシーと安全性</h2>
+    <ul>
+      <li>アカウント登録・ログイン・ユーザー生成コンテンツがありません</li>
+      <li>実行時に外部サービスへ接続しません。データ提供者、認証、解析、広告、トラッキングのいずれも使っていません</li>
+      <li>音源はすべて同梱で、実行時に取得しません。機内モードで全機能が動きます</li>
+      <li>記録は端末内にのみ保存されます</li>
+      <li>音声処理と解析はすべて端末上で行われます。CHECKタブに渡したファイルが送信されることはありません</li>
+      <li>環境音はすべてCC0素材で、出典・作者・ライセンスを記録し、アプリ内にも表示しています</li>
+      <li>医療機器ではありません。診断・治療・予防・効果測定を目的としません</li>
+    </ul>
 
-  <h2>まとめ</h2>
-  <p>このアプリで一番時間を使ったのは、実装ではなく<strong>測定と、その結果を受けて案を捨てること</strong>でした。</p>
-  <p>音楽に40Hzを掛ける案、刺激の横に音楽を並べる案、強度を3段階にする案、合成で環境音を作る案、ビットレートを上げてクリック音を消す案。どれも作ってから捨てています。捨てた判断はすべて、聴感か測定値のどちらか、あるいは両方に基づいています。</p>
-  <p>AIは実装、測定、文章、審査対応をかなり速くできます。しかし<strong>「この音を使うかどうか」は、人が聴いて決めるしかありませんでした。</strong>測定値が基準を満たした素材が、聴くと使えないことが何度もありました。逆に、聴いて良いと思った音が測ると成立していないこともありました。両方を突き合わせる作業が、結局このアプリの中身になっています。</p>
+    <h2 id="s17">公開状況とこれから</h2>
+    <table>
+      <tr><th>項目</th><th>状態</th></tr>
+      <tr><td>バージョン</td><td>1.0（ビルド16）</td></tr>
+      <tr><td>審査</td><td>2026年9月10日 承認</td></tr>
+      <tr><td>配信地域</td><td>日本のみ</td></tr>
+      <tr><td>対応デバイス</td><td>iPhone</td></tr>
+      <tr><td>収録音源</td><td>BGM 20曲、環境音7層（92MB）</td></tr>
+    </table>
+    <p>これからやることは、BGMの追加が中心です。Plusの説明に「今後追加される楽曲」と書いてあるので、書いた以上は続けます。あわせて、音源の測定値が変わっていないかの回帰確認をCIに載せる予定です。これはmacOSを使わずLinuxで回せるので、費用がかかりません。</p>
 
-  <hr>
-  <p class="meta"><a href="./">サポート</a> · <a href="privacy.html">プライバシーポリシー</a> · <a href="terms.html">利用規約</a></p>
-</main>
+    <h2 id="s18">まとめ</h2>
+    <p>iOSアプリを作ったことがなく、Macも持っていない状態から公開まで来て、わかったことが3つありました。</p>
+    <p><strong>1つ目は、Macがなくても出せることです。</strong>GitHub Actionsで数分だけMacを借りれば足ります。ただし課金の数え方がLinuxと違うので、そこだけは先に理解しておく必要がありました。</p>
+    <p><strong>2つ目は、審査は落ちる前提で組むことです。</strong>3回落ちましたが、内容を否定されたのは1回だけで、あとは情報不足と表示の不備でした。どちらも直せる種類のものです。</p>
+    <p><strong>3つ目は、AIに任せられる範囲がはっきりしていたことです。</strong>実装、測定、文章、審査対応はかなり速くできます。しかし<strong>「この音を使うかどうか」は、人が聴いて決めるしかありませんでした。</strong>Suno AIの生成でも同じで、プロンプトを工夫しても歩留まりは上がらず、数を作って聴いて選ぶしかありませんでした。</p>
+    <p>このアプリで一番時間を使ったのは、実装ではなく<strong>作ったものを測って捨てること</strong>でした。音楽に40Hzを掛ける案、刺激の横に音楽を並べる案、強度を3段階にする案、合成で環境音を作る案。どれも作ってから捨てています。捨てた判断はすべて、聴感か測定値のどちらか、あるいは両方に基づいています。</p>
+
+  </article>
+
+  <nav class="toc">
+    <strong>CONTENTS</strong>
+    <a href="#s1">はじめに — iOSは初めてでした</a>
+    <a href="#s2">何を作ったか</a>
+    <a href="#s3">解決したい課題</a>
+    <a href="#s4">なぜネイティブアプリにしたか</a>
+    <a href="#s5">音源をSuno AIで作る</a>
+    <a href="#s6">環境音は実録に置き換えた</a>
+    <a href="#s7">作ってから捨てた3つの案</a>
+    <a href="#s8">固定した音源と、測っている値</a>
+    <a href="#s9">CHECKタブ</a>
+    <a href="#s10">無料とPlusの線引き</a>
+    <a href="#s11">日本市場の法規制</a>
+    <a href="#s12">技術構成</a>
+    <a href="#s13">Macを持たずに出す</a>
+    <a href="#s14">Claude Code と Codex の分担</a>
+    <a href="#s15">審査に3回落ちた</a>
+    <a href="#s16">プライバシーと安全性</a>
+    <a href="#s17">公開状況とこれから</a>
+    <a href="#s18">まとめ</a>
+  </nav>
+</div>
+
+<footer>
+  <p>SOUND SPACE · 2026年9月10日</p>
+  <p><a href="./">サポート</a> · <a href="privacy.html">プライバシーポリシー</a> · <a href="terms.html">利用規約</a></p>
+</footer>
+
 </body>
 </html>
