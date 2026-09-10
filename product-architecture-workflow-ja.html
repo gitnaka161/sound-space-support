@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Suno AI × Claude Code × Codexで「SOUND SPACE」をApp Storeへ</title>
-<meta name="description" content="はじめてのiOSアプリ開発。Macを持たないまま、音源をSuno AIで作り、実装をClaude CodeとCodexで進め、App Storeの審査に3回落ちて公開するまでの記録です。">
+<meta name="description" content="BGMに環境音や音色を重ねて自分だけの瞑想サウンドを作るiPhoneアプリを、はじめてのiOS開発でApp Storeへ。音源はSuno AI、実装はClaude CodeとCodex、ビルドはMacを持たずGitHub Actionsで。審査に3回落ちて公開するまでの記録です。">
 <style>
 :root{
   --night:#0b1114; --teal:#2b5561;
@@ -98,7 +98,7 @@ footer a{color:var(--gold-light)}
     <p class="back"><a href="./">← SOUND SPACE サポート</a></p>
     <p class="eyebrow">Product Story / 2026</p>
     <h1>Suno AI × Claude Code × Codexで「SOUND SPACE」をApp Storeへ</h1>
-    <p class="lead">はじめてのiOSアプリ開発です。Macを1台も持たないまま、音源をSuno AIで作り、実装をClaude CodeとCodexで進め、App Storeの審査に3回落ちてから公開するまでの記録です。</p>
+    <p class="lead">BGMに環境音や音色を重ねて、自分だけの瞑想サウンドを作るiPhoneアプリです。はじめてのiOSアプリ開発で、Macを1台も持たないまま、音源をSuno AIで作り、実装をClaude CodeとCodexで進め、App Storeの審査に3回落ちてから公開しました。</p>
     <div class="tags">
       <span>WKWebView</span><span>StoreKit 2</span><span>Suno AI</span><span>GitHub Actions</span><span>Claude Code × Codex</span>
     </div>
@@ -116,22 +116,32 @@ footer a{color:var(--gold-light)}
       <p>効果や効能の話は書きません。このアプリが約束できるのは「出している音の仕様が正しいこと」だけで、それ以上は測っていないからです。理由は<a href="#s11">日本市場の法規制</a>の節で説明します。</p>
     </div>
 
-    <h2 id="s2">何を作ったか</h2>
-    <p>SOUND SPACE は、40Hzの聴覚刺激と瞑想音楽を、<strong>意図的に混ぜずに</strong>提供するiPhoneアプリです。</p>
+    <h2 id="s2">何を作ったか — 自分だけの瞑想サウンドを作る</h2>
+    <p>SOUND SPACE の中心にあるのは、<strong>自分だけの瞑想サウンドを組み立てられること</strong>です。できあいの音源をそのまま流すのではなく、音楽を選び、必要な音だけを重ね、時間を決めて始めます。</p>
+    <table>
+      <tr><th>手順</th><th>選ぶもの</th></tr>
+      <tr><td>1. 音楽を選ぶ</td><td>深い瞑想・リラックス・睡眠・集中・ソルフェジオの5モードから選び、収録BGM 20曲のうち1曲を選びます</td></tr>
+      <tr><td>2. 重ねる</td><td>音色として<strong>うなり</strong>か<strong>シンギングボウル</strong>を1つ。環境音として<strong>雨・波・川・森・焚き火</strong>から1つ。どちらも「なし」で構わず、後から変更できます</td></tr>
+      <tr><td>3. 時間を決めて始める</td><td>10分から60分、または無制限。いつでも停止できます</td></tr>
+    </table>
+    <p>「重ねる」を任意にしているのが要点です。各モードは<strong>BGMだけが鳴る状態から始まります。</strong>足すかどうかは利用者が決めます。既定で全部載せにすると、どの音が何なのか分からなくなるためです。</p>
+    <p>組み合わせは、たとえば「深い瞑想のBGM ＋ 雨 ＋ 20分」や「集中のBGM ＋ 川 ＋ 60分」のように作ります。約528Hzのチャイムを重ねたい場合は詳細画面から追加できます。</p>
     <p>サーバーはありません。BGM 20曲と環境音7層、合わせて92MBの音源をすべてアプリに同梱しているので、機内モードでも全機能が動きます。通信を必要とする箇所が一つもないため、アカウント登録もありません。</p>
     <table>
       <tr><th>タブ</th><th>役割</th></tr>
-      <tr><td>瞑想</td><td>BGMを選び、音色と環境音を重ね、時間を決めて始める</td></tr>
-      <tr><td>Gamma</td><td>40Hz刺激ツール。<strong>音楽とは経路が分かれている</strong></td></tr>
+      <tr><td>瞑想</td><td>上の3手順で自分の瞑想サウンドを組み立てる。<strong>アプリの中心</strong></td></tr>
+      <tr><td>Gamma</td><td>40Hz刺激ツール。瞑想サウンドとは独立している</td></tr>
       <tr><td>詳細</td><td>周波数・音量・レイヤーの調整</td></tr>
       <tr><td>RECORD</td><td>連続日数と履歴</td></tr>
       <tr><td>CHECK</td><td>手元の音声ファイルの変調を測る</td></tr>
     </table>
 
-    <h2 id="s3">解決したい課題</h2>
-    <p>「40Hz」を掲げた音源はすでに大量にあります。しかしその多くが<strong>バイノーラルビート</strong>という方式です。左右の耳にわずかに違う周波数を流し、その差をうなりとして知覚させる方式です。</p>
+    <h2 id="s3">もう一つの機能 — Gamma 40</h2>
+    <p>瞑想サウンドとは別に、<strong>Gamma 40</strong> という独立したタブがあります。40Hzの聴覚刺激だけを鳴らすツールで、作業や読書のあいだに流す想定です。音楽ではありません。</p>
+    <p>これを別のタブに分けているのには理由があります。「40Hz」を掲げた音源はすでに大量にありますが、その多くが<strong>バイノーラルビート</strong>という方式です。左右の耳にわずかに違う周波数を流し、その差をうなりとして知覚させる方式です。</p>
     <p>ここに問題があります。<strong>左右の周波数差は30Hzを超えると、うなりとして知覚されにくくなります。</strong>つまり40Hzでは方式として成立しにくい。40Hzの聴覚刺激を扱う研究で使われてきたのは、音そのものを毎秒40回強弱させる<strong>振幅変調（アイソクロニック）</strong>のほうです。</p>
-    <p>そして利用者には、手元の音源がどちらの方式なのか、本当に主張どおりの刺激を含んでいるのかを確かめる手段がありません。ここを埋めるのが出発点でした。</p>
+    <p>そして利用者には、手元の音源がどちらの方式なのか、本当に主張どおりの刺激を含んでいるのかを確かめる手段がありません。Gamma 40 と、後述する<a href="#s9">CHECKタブ</a>は、この穴を埋めるために作りました。</p>
+    <p><strong>瞑想サウンドとGamma 40を混ぜられない</strong>ことも、測ってから分かりました。理由は<a href="#s7">作ってから捨てた3つの案</a>で説明します。</p>
 
     <h2 id="s4">なぜネイティブアプリにしたか</h2>
     <p>もともとPWA（ブラウザで動くWebアプリ）として作っていました。ネイティブ化した理由は2つです。</p>
@@ -350,8 +360,8 @@ footer a{color:var(--gold-light)}
   <nav class="toc">
     <strong>CONTENTS</strong>
     <a href="#s1">はじめに — iOSは初めてでした</a>
-    <a href="#s2">何を作ったか</a>
-    <a href="#s3">解決したい課題</a>
+    <a href="#s2">何を作ったか — 瞑想サウンドを作る</a>
+    <a href="#s3">もう一つの機能 — Gamma 40</a>
     <a href="#s4">なぜネイティブアプリにしたか</a>
     <a href="#s5">音源をSuno AIで作る</a>
     <a href="#s6">環境音は実録に置き換えた</a>
