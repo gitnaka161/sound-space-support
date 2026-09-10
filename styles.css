@@ -33,3 +33,19 @@ a { color: var(--gold); text-underline-offset: 3px; }
 .card { padding: 18px 20px; border: 1px solid var(--line); background: var(--panel); }
 nav { display: flex; flex-wrap: wrap; gap: 18px; margin: 28px 0; }
 small { color: var(--dim); }
+
+h3 { margin-top: 28px; font-size: 17px; color: var(--text); }
+.lede { border-left: 2px solid var(--gold); padding-left: 16px; margin: 28px 0; }
+.lede p { color: var(--text); }
+table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 15px; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--text); font-weight: 500; }
+td { color: var(--dim); }
+td strong, li strong, p strong { color: var(--text); font-weight: 500; }
+figure { margin: 28px 0; }
+figure svg { width: 100%; height: auto; display: block; }
+figcaption { color: var(--dim); font-size: 14px; margin-top: 10px; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.92em; color: var(--text); background: var(--panel); padding: 1px 5px; border: 1px solid var(--line); }
+blockquote { margin: 20px 0; padding: 14px 18px; border: 1px solid var(--line); background: var(--panel); }
+blockquote p { margin: 0; color: var(--dim); }
+.meta { color: var(--dim); font-size: 14px; }
