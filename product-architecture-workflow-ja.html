@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>音を測り、耳で選び、「SOUND SPACE」をApp Storeへ</title>
+<title>Suno AI × Claude Code × Codexで「SOUND SPACE」をApp Storeへ</title>
 <meta name="description" content="瞑想音楽と40Hz刺激を分離し、20曲のBGM、CC0実録環境音、StoreKit課金を備えたiPhoneアプリを、WindowsからApp Storeへ届けた開発記録です。">
-<meta property="og:title" content="音を測り、耳で選び、「SOUND SPACE」をApp Storeへ">
+<meta property="og:title" content="Suno AI × Claude Code × Codexで「SOUND SPACE」をApp Storeへ">
 <meta property="og:description" content="作って、測って、聴いて、捨てる。瞑想音楽とGamma 40を分離した設計、実録環境音、iPhone実機検証、Apple審査までの記録。">
 <meta property="og:type" content="article">
 <meta property="og:locale" content="ja_JP">
@@ -123,7 +123,7 @@ footer a{color:var(--gold-light)}
     <div class="hero-grid">
       <div>
         <p class="eyebrow">Product Story / 2026</p>
-        <h1>音を測り、耳で選び、「SOUND SPACE」をApp Storeへ</h1>
+        <h1>Suno AI × Claude Code × Codexで「SOUND SPACE」をApp Storeへ</h1>
         <p class="lead">BGMに環境音や音色を重ねて、自分だけの瞑想サウンドを作るiPhoneアプリです。はじめてのiOS開発をWindowsから始め、設計、音源評価、実機検証、課金、Apple審査まで進めました。</p>
         <div class="tags">
           <span>iOS / Swift</span><span>WKWebView</span><span>StoreKit 2</span><span>GitHub Actions</span><span>Claude Design × Claude Code × Codex</span>
@@ -345,14 +345,17 @@ footer a{color:var(--gold-light)}
     <p>この構成には費用の落とし穴がありました。<strong>GitHubはmacOSの実行時間をLinuxの10倍で数えます。</strong>privateリポジトリの無料枠は月2,000分ですが、macOSだと6分のジョブで60分消費されるため、実質30回ほどのビルドで尽きます。</p>
     <p>開発が集中した数日で枠を使い切り、審査対応が数日止まりました。原因は<strong>ソースを変更するたびに自動でビルドが走る設定</strong>にしていたことです。Webサービスなら妥当な設定ですが、iOSでは高すぎました。現在は手動実行のみに変え、ビルドは「出すとき」だけ回しています。</p>
 
-    <h2 id="s14">Claude Code と Codex の分担</h2>
-    <p>実装と文章はAIに、判断と実機確認は人が担当しました。2つのAIを併用したのは、片方が利用上限に達したときにもう片方が続けられるようにするためです。引き継ぎはリポジトリ内のドキュメントを介して行いました。</p>
+    <h2 id="s14">Claude Code と Codexを引き継ぎながら使う</h2>
+    <p>Claude CodeとCodexに、設計担当・実装担当という固定の役割は決めませんでした。実際の運用はもっと単純で、<strong>片方が利用上限に達したら、もう片方が同じリポジトリから続きを引き継ぐ</strong>というリレー方式です。どちらも、コードの調査、実装、音源の測定、文章作成、審査対応を必要に応じて担当しました。</p>
+    <p>この方法で重要だったのは、AIごとの役割分担ではなく、<strong>作業の根拠と現在地をリポジトリへ残すこと</strong>でした。測定値、採用・不採用の理由、App Store審査の経緯、次に確認する項目を引継ぎ文書へ書き、Gitの履歴と実ファイルを見れば別のAIでも同じ地点から再開できるようにしました。</p>
     <table>
-      <tr><th>担当</th><th>やったこと</th></tr>
-      <tr><td>人</td><td>音の採否を試聴で決める。実機での動作確認と画面収録。課金設定と支払い。公開の最終判断</td></tr>
-      <tr><td>AI</td><td>実装。音源の測定と処理。ストア掲載文。審査への返信。CIの整備。この記事の執筆</td></tr>
+      <tr><th>引き継ぐもの</th><th>残した内容</th></tr>
+      <tr><td>リポジトリ</td><td>コード、音源、評価結果、公開用ファイルを同じ場所で共有</td></tr>
+      <tr><td>引継ぎ文書</td><td>決定事項、失敗した案、再現手順、審査状況、未確認事項を記録</td></tr>
+      <tr><td>Git履歴</td><td>どの変更がいつ入ったかを確認し、途中の状態から再開</td></tr>
+      <tr><td>人の確認</td><td>音の最終試聴、iPhone実機確認、課金操作、公開判断を担当</td></tr>
     </table>
-    <p>この分担で外せなかったのが<strong>試聴</strong>です。測定値が基準を満たした素材が、聴くと使えないことが何度もありました。逆に、聴いて良いと思った音が測ると成立していないこともありました。<strong>音楽の採否は測定では決まりません。</strong></p>
+    <p>AIを交代できても、人にしかできない確認は残りました。特に外せなかったのが<strong>試聴</strong>です。測定値が基準を満たした素材が、聴くと使えないことが何度もありました。逆に、聴いて良いと思った音が測ると成立していないこともありました。<strong>音楽の採否は測定では決まりません。</strong></p>
     <p>もう一つAIに任せられなかったのが<strong>実機の画面収録</strong>です。App Reviewが要求したのは「実機で撮影した操作の録画」で、これはiPhoneを持っている人にしか作れません。</p>
 
     <h2 id="s15">2度の差し戻しと、3回目の承認</h2>
@@ -422,7 +425,7 @@ footer a{color:var(--gold-light)}
     <a href="#s12">技術構成</a>
     <a href="#architecture">実行時アーキテクチャ</a>
     <a href="#s13">Macを持たずに出す</a>
-    <a href="#s14">Claude Code と Codex の分担</a>
+    <a href="#s14">Claude Code と Codexを引き継ぐ</a>
     <a href="#s15">2度の差し戻しと承認</a>
     <a href="#s16">プライバシーと安全性</a>
     <a href="#s17">公開状況とこれから</a>
