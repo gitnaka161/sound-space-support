@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Suno AI × Claude Code × Codexで「SOUND SPACE」をApp Storeへ</title>
-<meta name="description" content="瞑想音楽と40Hz刺激を分離し、20曲のBGM、CC0実録環境音、StoreKit課金を備えたiPhoneアプリを、WindowsからApp Storeへ届けた開発記録です。">
+<meta name="description" content="BGMに雨や波などの実録環境音や音色を重ねて、自分だけの瞑想サウンドを作るiPhoneアプリ。はじめてのiOS開発で、WindowsからApp Storeへ届けるまでの設計・音源評価・実機検証・課金・Apple審査の記録です。">
 <meta property="og:title" content="Suno AI × Claude Code × Codexで「SOUND SPACE」をApp Storeへ">
-<meta property="og:description" content="作って、測って、聴いて、捨てる。瞑想音楽とGamma 40を分離した設計、実録環境音、iPhone実機検証、Apple審査までの記録。">
+<meta property="og:description" content="BGMに環境音や音色を重ね、時間を決めて、自分だけの瞑想サウンドを作る。Suno AIでの音源評価、実録環境音、iPhone実機検証、Apple審査までの開発記録。">
 <meta property="og:type" content="article">
 <meta property="og:locale" content="ja_JP">
 <meta property="og:image" content="https://gitnaka161.github.io/sound-space-support/assets/sound-space-icon.png">
@@ -126,7 +126,7 @@ footer a{color:var(--gold-light)}
         <h1>Suno AI × Claude Code × Codexで「SOUND SPACE」をApp Storeへ</h1>
         <p class="lead">BGMに環境音や音色を重ねて、自分だけの瞑想サウンドを作るiPhoneアプリです。はじめてのiOS開発をWindowsから始め、設計、音源評価、実機検証、課金、Apple審査まで進めました。</p>
         <div class="tags">
-          <span>iOS / Swift</span><span>WKWebView</span><span>StoreKit 2</span><span>GitHub Actions</span><span>Claude Design × Claude Code × Codex</span>
+          <span>iOS / Swift</span><span>WKWebView</span><span>StoreKit 2</span><span>GitHub Actions</span><span>Suno AI</span><span>Claude Code × Codex</span>
         </div>
       </div>
       <img class="hero-icon" src="assets/sound-space-icon.png" alt="満月と水面の波紋を表したSOUND SPACEのアプリアイコン">
@@ -149,7 +149,7 @@ footer a{color:var(--gold-light)}
     <p>SOUND SPACE の中心にあるのは、<strong>自分だけの瞑想サウンドを組み立てられること</strong>です。できあいの音源をそのまま流すのではなく、音楽を選び、必要な音だけを重ね、時間を決めて始めます。</p>
     <table>
       <tr><th>手順</th><th>選ぶもの</th></tr>
-      <tr><td>1. 音楽を選ぶ</td><td>深い瞑想・リラックス・睡眠・集中・ソルフェジオの5モードから選び、収録BGM 20曲のうち1曲を選びます</td></tr>
+      <tr><td>1. 音楽を選ぶ</td><td>深い瞑想・リラックス・睡眠・集中・ソルフェジオの5モードから選び、そのモードに合わせたBGM（全20曲）から1曲を選びます</td></tr>
       <tr><td>2. 重ねる</td><td>音色として<strong>うなり</strong>か<strong>シンギングボウル</strong>を1つ。環境音として<strong>雨・波・川・森・焚き火</strong>から1つ。どちらも「なし」で構わず、後から変更できます</td></tr>
       <tr><td>3. 時間を決めて始める</td><td>10分から60分、または無制限。いつでも停止できます</td></tr>
     </table>
@@ -244,7 +244,7 @@ footer a{color:var(--gold-light)}
     <p>課金の根拠はコスト構造とも一致しました。合成音の配信コストは小さい一方、<strong>BGMの制作・評価・権利記録・追加には継続的な費用と作業が伴います。</strong>既存の全曲と今後追加する曲を提供することを、Plusの継続的な価値としました。</p>
     <table>
       <tr><th>無料</th><th>SOUND SPACE Plus（月額480円 / 年額3,600円）</th></tr>
-      <tr><td>Gamma 40（時間無制限）、各カテゴリ1曲、雨、波、うなり、記録</td><td>全20曲と今後追加される楽曲、川・森・焚き火・シンギングボウル・約528Hzチャイム、詳細調整、プリセットの無制限保存</td></tr>
+      <tr><td>Gamma 40（時間無制限）、CHECKタブ、各カテゴリ1曲、雨、波、うなり、記録</td><td>全20曲と今後追加される楽曲、川・森・焚き火・シンギングボウル・約528Hzチャイム、詳細調整、プリセットの無制限保存</td></tr>
     </table>
 
     <p>音楽を完全に閉じないことも意図的です。無料版が「合成音だけ鳴るアプリ」だと、利用者は自分が何を買おうとしているのか分からないまま判断することになります。<strong>無料で数曲聴けて「Plusでは全20曲と今後の追加曲を使える」と分かる状態</strong>が、購入前に内容を確かめやすい形だと考えました。</p>
@@ -260,8 +260,8 @@ footer a{color:var(--gold-light)}
     <p>3つ目は補足が必要です。<a href="#s7">先ほどの測定</a>のとおり、変調されていない音を刺激の横に置くと谷が埋まります。広告音声はまさにそれで、鳴っているあいだ刺激が成立しません。広告は理念の問題ではなく、<strong>この製品では技術的に両立しない</strong>という話でした。</p>
 
     <h3>価格をどう決めたか</h3>
-    <p>買い切りは出していません。毎月BGMを足すという約束と両立しないためです。あとから追加はできますが、撤回はできません。</p>
-    <p>価格は市場相場の中に置きました。海外の主要アプリが年5,000〜6,500円、国内の瞑想アプリが月500〜980円という水準に対して、月480円・年3,600円です。Appleの手数料はSmall Business Programで15%。アプリ内課金はAppleが販売者になるため、決済・消費税・返金対応を自前で持たなくてよいのも、個人開発では大きい判断材料でした。</p>
+    <p>買い切りは出していません。BGMを継続的に追加していく提供内容と両立しないためです。あとから追加はできますが、撤回はできません。</p>
+    <p>価格は、既存の瞑想アプリの月額・年額と比べて手に取りやすい水準を目安に、月480円・年3,600円にしました。Appleの手数料はSmall Business Programで15%。アプリ内課金はAppleが販売者になるため、決済・消費税・返金対応を自前で持たなくてよいのも、個人開発では大きい判断材料でした。</p>
 
     <h2 id="s11">日本市場の法規制</h2>
     <p>有料・無料にかかわらず、周波数や瞑想に効能を結びつける表現は慎重に扱う必要があります。有料化を設計する段階で、掲載文とアプリ内の説明を事実ベースへ揃えました。</p>
@@ -342,7 +342,7 @@ footer a{color:var(--gold-light)}
       <figcaption>矢印は一方向です。App Store Connect から GitHub を見に来ることはありません。ビルドしたファイルを GitHub 側から App Store Connect の API へ送りつけています。</figcaption>
     </figure>
 
-    <p>この構成には費用の落とし穴がありました。<strong>GitHubはmacOSの実行時間をLinuxの10倍で数えます。</strong>privateリポジトリの無料枠は月2,000分ですが、macOSだと6分のジョブで60分消費されるため、実質30回ほどのビルドで尽きます。</p>
+    <p>この構成には費用の落とし穴がありました。<strong>GitHubはmacOSの実行時間をLinuxの10倍で数えます。</strong>privateリポジトリの無料枠は月2,000分ですが、macOSでは1分が10分として数えられます。検証とアップロードを通しで回すと約13分、つまり130分ぶん消費するため、実質15回ほどのビルドで尽きます。</p>
     <p>開発が集中した数日で枠を使い切り、審査対応が数日止まりました。原因は<strong>ソースを変更するたびに自動でビルドが走る設定</strong>にしていたことです。Webサービスなら妥当な設定ですが、iOSでは高すぎました。現在は手動実行のみに変え、ビルドは「出すとき」だけ回しています。</p>
 
     <h2 id="s14">会話ではなく、リポジトリを中心にAIと協働する</h2>
