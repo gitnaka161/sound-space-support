@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "SOUND SPACE 実行時アーキテクチャ",
+    "quality_profile": "showcase",
+    "viewBox": [1240, 720],
+    "views": [
+      {
+        "id": "meditation-path",
+        "label": "瞑想セッション",
+        "focus": ["listener", "ios-shell", "web-ui", "audio-engine", "music-library", "environment-library"],
+        "note": "BGM、実録環境音、任意の音色を端末内で重ねる経路です。"
+      },
+      {
+        "id": "gamma-path",
+        "label": "Gamma 40",
+        "focus": ["listener", "ios-shell", "native-audio", "gamma-source"],
+        "note": "瞑想音楽と混ぜず、固定した40 Hz刺激音源を再生します。"
+      },
+      {
+        "id": "plus-path",
+        "label": "Plus購入",
+        "focus": ["web-ui", "native-bridge", "storekit"],
+        "note": "表示価格、購入、復元、利用権の確認だけをAppleのStoreKitへ委ねます。"
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "listener",
+      "type": "external",
+      "label": "利用者",
+      "sublabel": "iPhone / イヤホン・スピーカー",
+      "pos": [36, 272],
+      "size": [158, 76]
+    },
+    {
+      "id": "ios-shell",
+      "type": "frontend",
+      "label": "iOSアプリ",
+      "sublabel": "WKWebView + ネイティブシェル",
+      "pos": [236, 272],
+      "size": [180, 76]
+    },
+    {
+      "id": "web-ui",
+      "type": "frontend",
+      "label": "瞑想UI",
+      "sublabel": "モード・BGM・重ねる音・時間",
+      "pos": [466, 132],
+      "size": [190, 82]
+    },
+    {
+      "id": "audio-engine",
+      "type": "backend",
+      "label": "Web Audioエンジン",
+      "sublabel": "BGMと追加レイヤーを端末内ミックス",
+      "pos": [720, 132],
+      "size": [206, 82]
+    },
+    {
+      "id": "music-library",
+      "type": "database",
+      "label": "瞑想BGM",
+      "sublabel": "Deep / Focus / Sacred / Pure",
+      "pos": [1000, 70],
+      "size": [196, 76]
+    },
+    {
+      "id": "environment-library",
+      "type": "database",
+      "label": "実録サウンド",
+      "sublabel": "雨・波・川・森・焚き火・ボウル",
+      "pos": [1000, 194],
+      "size": [196, 76]
+    },
+    {
+      "id": "native-audio",
+      "type": "backend",
+      "label": "ネイティブ音声再生",
+      "sublabel": "バックグラウンド再生",
+      "pos": [466, 400],
+      "size": [190, 76]
+    },
+    {
+      "id": "gamma-source",
+      "type": "database",
+      "label": "固定Gamma 40音源",
+      "sublabel": "39.999 Hz / 深度100%",
+      "pos": [720, 400],
+      "size": [206, 76]
+    },
+    {
+      "id": "native-bridge",
+      "type": "security",
+      "label": "購入ブリッジ",
+      "sublabel": "価格・購入・復元・利用権",
+      "pos": [236, 566],
+      "size": [190, 76]
+    },
+    {
+      "id": "storekit",
+      "type": "external",
+      "label": "Apple StoreKit",
+      "sublabel": "月額・年額SOUND SPACE Plus",
+      "pos": [466, 566],
+      "size": [206, 76]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "端末内で完結する音声体験",
+      "wraps": ["ios-shell", "web-ui", "audio-engine", "music-library", "environment-library", "native-audio", "gamma-source", "native-bridge"],
+      "pad": 24
+    }
+  ],
+  "connections": [
+    {"id": "listen", "from": "listener", "to": "ios-shell", "label": "操作・再生", "variant": "emphasis", "labelAt": [215, 362]},
+    {"id": "open-ui", "from": "ios-shell", "to": "web-ui", "label": "表示", "fromSide": "top", "toSide": "left"},
+    {"id": "mix-request", "from": "web-ui", "to": "audio-engine", "label": "セッション設定", "variant": "emphasis", "labelAt": [688, 228]},
+    {"id": "load-music", "from": "music-library", "to": "audio-engine", "label": "選択したBGM"},
+    {"id": "load-environment", "from": "environment-library", "to": "audio-engine", "label": "最大2レイヤー"},
+    {"id": "gamma-control", "from": "ios-shell", "to": "native-audio", "label": "開始・停止", "fromSide": "bottom", "toSide": "left"},
+    {"id": "gamma-load", "from": "gamma-source", "to": "native-audio", "label": "固定音源"},
+    {"id": "billing-request", "from": "ios-shell", "to": "native-bridge", "label": "Plus操作", "fromSide": "bottom", "toSide": "top", "labelAt": [288, 510]},
+    {"id": "storekit-request", "from": "native-bridge", "to": "storekit", "label": "StoreKit 2", "variant": "security", "labelAt": [446, 562]}
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "音楽と刺激を分離",
+      "items": ["MeditationはBGMを変調しない", "Gamma 40は音楽と混ぜない独立ツール"]
+    },
+    {
+      "dot": "amber",
+      "title": "プライバシー優先",
+      "items": ["会員登録・広告・トラッキングなし", "音源と設定は端末内で処理"]
+    }
+  ]
+}
