@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Suno AI × Claude Code × Codexで「SOUND SPACE」をApp Storeへ</title>
-<meta name="description" content="BGMに雨や波などの実録環境音や音色を重ねて、自分だけの瞑想サウンドを作るiPhoneアプリ。はじめてのiOS開発で、WindowsからApp Storeへ届けるまでの設計・音源評価・実機検証・課金・Apple審査の記録です。">
-<meta property="og:title" content="Suno AI × Claude Code × Codexで「SOUND SPACE」をApp Storeへ">
-<meta property="og:description" content="BGMに環境音や音色を重ね、時間を決めて、自分だけの瞑想サウンドを作る。Suno AIでの音源評価、実録環境音、iPhone実機検証、Apple審査までの開発記録。">
+<title>Suno AI × Claude Design × Claude Codeで「SOUND SPACE」をApp Storeへ</title>
+<meta name="description" content="BGMに雨や波などの実録環境音や音色を重ねて、自分だけの瞑想サウンドを作るiPhone・iPadアプリ。Suno AIで音源を作り、Claude Designで画面をレビュー・再設計し、Claude CodeとCodexで実装して、はじめてのiOS開発からApp Storeへ届けるまでの記録です。">
+<meta property="og:title" content="Suno AI × Claude Design × Claude Codeで「SOUND SPACE」をApp Storeへ">
+<meta property="og:description" content="BGMに環境音や音色を重ね、時間を決めて、自分だけの瞑想サウンドを作る。Suno AIでの音源づくり、Claude Designによる画面のレビューと作り直し、実装とApple審査までの開発記録。">
 <meta property="og:type" content="article">
 <meta property="og:locale" content="ja_JP">
 <meta property="og:image" content="https://gitnaka161.github.io/sound-space-support/assets/sound-space-icon.png">
@@ -87,6 +87,11 @@ figcaption{margin-top:10px; color:var(--muted); font-family:"Hiragino Sans","Yu 
 .screen-gallery figure{margin:0}
 .screen-gallery img{width:100%; display:block; border:1px solid var(--line); border-radius:14px; box-shadow:0 8px 22px rgba(20,30,34,.10)}
 .screen-gallery figcaption{text-align:center; font-size:.74rem}
+.before-after .ba-pair{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; max-width:560px; margin:0 auto}
+.before-after .ba-pair div{position:relative}
+.before-after img{border-radius:14px; box-shadow:0 8px 22px rgba(20,30,34,.10)}
+.before-after span{position:absolute; left:10px; top:10px; padding:2px 10px; border-radius:999px; background:rgba(11,17,20,.78); color:#f3efe4; font-family:"Hiragino Sans","Yu Gothic",sans-serif; font-size:.74rem; letter-spacing:.06em}
+.before-after figcaption{text-align:center}
 .architecture-link{display:block; overflow:hidden; border-radius:14px; box-shadow:0 12px 30px rgba(20,30,34,.10)}
 .cta-row{display:flex; flex-wrap:wrap; gap:12px; margin:2rem 0 .5rem}
 .cta-row a{display:inline-block; padding:11px 17px; border:1px solid var(--gold); border-radius:999px;
@@ -123,10 +128,10 @@ footer a{color:var(--gold-light)}
     <div class="hero-grid">
       <div>
         <p class="eyebrow">Product Story / 2026</p>
-        <h1>Suno AI × Claude Code × Codexで「SOUND SPACE」をApp Storeへ</h1>
-        <p class="lead">BGMに環境音や音色を重ねて、自分だけの瞑想サウンドを作るiPhoneアプリです。はじめてのiOS開発をWindowsから始め、設計、音源評価、実機検証、課金、Apple審査まで進めました。</p>
+        <h1>Suno AI × Claude Design × Claude Codeで「SOUND SPACE」をApp Storeへ</h1>
+        <p class="lead">BGMに環境音や音色を重ねて、自分だけの瞑想サウンドを作るアプリです。はじめてのiOS開発をWindowsから始め、Suno AIで音源を作り、Claude Designに画面をレビューしてもらって作り直し、iPhoneとiPadのApp Storeへ届けました。</p>
         <div class="tags">
-          <span>iOS / Swift</span><span>WKWebView</span><span>StoreKit 2</span><span>GitHub Actions</span><span>Suno AI</span><span>Claude Code × Codex</span>
+          <span>iOS / Swift</span><span>WKWebView</span><span>StoreKit 2</span><span>GitHub Actions</span><span>Suno AI</span><span>Claude Design</span><span>Claude Code × Codex</span>
         </div>
       </div>
       <img class="hero-icon" src="assets/sound-space-icon.png" alt="満月と水面の波紋を表したSOUND SPACEのアプリアイコン">
@@ -139,7 +144,14 @@ footer a{color:var(--gold-light)}
 
     <h2 id="s1">はじめに — iOSは初めてでした</h2>
     <p>エンジニアではありますが、iOSアプリを作ったことは一度もありませんでした。開発機はWindowsで、Macは持っていません。Xcodeも触ったことがない状態からのスタートです。</p>
-    <p>その状態で、音を扱うアプリをApp Storeへ届けました。<strong>2度差し戻され、3回目の審査で承認されています。</strong>この記事は、何を作り、何を作ってから捨て、どこでつまずいたかの記録です。</p>
+    <p>その状態で、音を扱うアプリをApp Storeへ届けました。<strong>2度差し戻され、3回目の審査で承認されています。</strong>その後、<strong>Claude Designのレビューと提案をもとに画面を作り直した1.1.0</strong>を、iPad対応とあわせて配信しました。この記事は、何を作り、何を作ってから捨て、どこでつまずいたかの記録です。</p>
+    <p>使った道具と、それぞれに任せたことは次のとおりです。</p>
+    <table>
+      <tr><th>道具</th><th>担当したこと</th></tr>
+      <tr><td>Suno AI</td><td>BGM 20曲の生成。使うかどうかは、人が試聴して決める</td></tr>
+      <tr><td>Claude Design</td><td>画面のレビュー、改善デザイン案、実装の指示書。公開版を操作した画面のスナップショット13枚を見てもらった</td></tr>
+      <tr><td>Claude Code / Codex</td><td>実装、音源の測定、ビルドと配布、App Store審査への対応。1.1.0の画面は、Claude Designの指示書をもとにCodexが実装した</td></tr>
+    </table>
     <div class="callout">
       <span class="label">この記事で書かないこと</span>
       <p>効果や効能の話は書きません。このアプリが約束できるのは「出している音の仕様が正しいこと」だけで、それ以上は測っていないからです。理由は<a href="#s11">日本市場の法規制</a>の節で説明します。</p>
@@ -154,29 +166,86 @@ footer a{color:var(--gold-light)}
       <tr><td>3. 時間を決めて始める</td><td>10分から60分、または無制限。いつでも停止できます</td></tr>
     </table>
     <p>「重ねる」を任意にしているのが要点です。各モードは<strong>BGMだけが鳴る状態から始まります。</strong>足すかどうかは利用者が決めます。既定で全部載せにすると、どの音が何なのか分からなくなるためです。</p>
-    <p>組み合わせは、たとえば「深い瞑想のBGM ＋ 雨 ＋ 20分」や「集中のBGM ＋ 川 ＋ 60分」のように作ります。約528Hzのチャイムを重ねたい場合は詳細画面から追加できます。</p>
+    <p>組み合わせは、たとえば「深い瞑想のBGM ＋ 雨 ＋ 20分」や「集中のBGM ＋ 川 ＋ 60分」のように作ります。約528Hzのチャイムを重ねたい場合は「音の調整」タブから追加できます。</p>
+    <p>アプリを開くと、無料の曲が1曲選ばれた状態で、すぐに「再生する」を押せます。この画面の構成は、<a href="#design">Claude Designのレビューをもとに作り直したもの</a>です。</p>
     <p>独自のバックエンドサーバーはありません。BGM 20曲と環境音7層、合わせて92MBの音源をすべてアプリに同梱しているため、音源再生・記録・解析は機内モードでも動きます。通信を使うのは購入と復元のためのStoreKitだけで、アカウント登録はありません。</p>
     <table>
       <tr><th>タブ</th><th>役割</th></tr>
-      <tr><td>瞑想</td><td>上の3手順で自分の瞑想サウンドを組み立てる。<strong>アプリの中心</strong></td></tr>
-      <tr><td>Gamma</td><td>40Hz刺激ツール。瞑想サウンドとは独立している</td></tr>
-      <tr><td>詳細</td><td>周波数・音量・レイヤーの調整</td></tr>
-      <tr><td>RECORD</td><td>連続日数と履歴</td></tr>
-      <tr><td>CHECK</td><td>手元の音声ファイルの変調を測る</td></tr>
+      <tr><td>瞑想</td><td>上の3項目で自分の瞑想サウンドを組み立てて再生する。<strong>アプリの中心</strong></td></tr>
+      <tr><td>ガンマ</td><td>40Hz刺激ツール。瞑想サウンドとは独立している</td></tr>
+      <tr><td>音の調整</td><td>周波数・音量・レイヤーの細かな調整</td></tr>
+      <tr><td>記録</td><td>連続日数と履歴。手元の音声ファイルの変調を測る「音源チェック」もここにある</td></tr>
     </table>
 
     <div class="screen-gallery" aria-label="SOUND SPACEの主要画面">
-      <figure><img src="assets/sound-space-meditation.jpg" alt="音楽を選び、重ねる音と時間を決める瞑想画面"><figcaption>瞑想</figcaption></figure>
-      <figure><img src="assets/sound-space-layers.jpg" alt="実録環境音と音色を選ぶ画面"><figcaption>重ねる音</figcaption></figure>
-      <figure><img src="assets/sound-space-gamma.jpg" alt="固定した40Hz刺激音源を再生するGamma画面"><figcaption>Gamma 40</figcaption></figure>
-      <figure><img src="assets/sound-space-plus.jpg" alt="月額と年額を選ぶSOUND SPACE Plus画面"><figcaption>Plus</figcaption></figure>
+      <figure><img src="assets/sound-space-v11-home.png" alt="現在のサウンドと、音楽・重ねる音・時間の3項目を並べた瞑想ホーム"><figcaption>瞑想ホーム</figcaption></figure>
+      <figure><img src="assets/sound-space-v11-layers.png" alt="音色と実録環境音を1つずつ選ぶ、下から開く画面"><figcaption>重ねる音</figcaption></figure>
+      <figure><img src="assets/sound-space-v11-playing.png" alt="残り時間と終了ボタンだけを表示する再生中の画面"><figcaption>再生中</figcaption></figure>
+      <figure><img src="assets/sound-space-v11-gamma.png" alt="固定した40Hz刺激音源を再生するガンマ画面"><figcaption>Gamma 40</figcaption></figure>
     </div>
 
+    <h2 id="design">画面は Claude Design で作り直した</h2>
+    <p>最初に審査を通った1.0は、機能としては揃っていましたが、画面は開発の順番どおりに部品を積み上げたものでした。そこで配信後、<strong>公開版を実際に操作した画面のスナップショット13枚をClaude Designに渡し、画面を見てもらってレビューと改善案をもらいました。</strong>その提案をもとにCodexが実装したのが1.1.0です。</p>
+    <figure class="before-after">
+      <div class="ba-pair">
+        <div><img src="assets/sound-space-before-home.jpg" alt="1.0の瞑想画面。無料版の説明、音楽を選ぶ手順、押せないBGM選択ボタンが縦に並ぶ"><span>1.0</span></div>
+        <div><img src="assets/sound-space-after-home.jpg" alt="1.1.0の瞑想ホーム。現在のサウンド、再生ボタン、音楽・重ねる音・時間の3項目"><span>1.1.0</span></div>
+      </div>
+      <figcaption>瞑想タブを開いた直後の画面。左がClaude Designに渡した1.0、右が提案を反映した1.1.0です。</figcaption>
+    </figure>
+
+    <h3>レビュー — 「瞑想アプリなのに、画面が設定パネルに見える」</h3>
+    <p>Claude Designのレビューは、問題をこの一点にまとめていました。最初に触れる画面が、番号付きの手順、注意書き、押せないボタンで埋まっていて、静けさがない、という指摘です。方針として示されたのは、情報を<strong>「見せる」から「隠して、必要な時に出す」へ</strong>変えることでした。</p>
+    <p>良い点も挙げられていました。「無料版のまま使えます」「料金は自動では発生しません」を最初に置いている課金の透明性です。そのうえで、指摘は14件、優先度つきで並んでいました。</p>
+    <table>
+      <tr><th>優先度</th><th>主な指摘</th></tr>
+      <tr><td>P0 最優先</td><td>スクロールすると本文がステータスバーの裏に入る／下部の固定ボタンが本文を切る／初回起動の主役が押せない「BGMを選択」ボタン／Plus加入中なのに価格が購入できる見た目で出ている</td></tr>
+      <tr><td>P1 体験の質</td><td>説明文が多すぎる／Gammaタブが警告から始まる／タブ名に日本語・英語・大文字英語が混ざる／アクセントカラーが2系統ある／補助テキストのコントラスト不足／初回ユーザーに「0 日連続」を目立つ位置で見せている</td></tr>
+      <tr><td>P2 磨き込み</td><td>手順番号と1枚スクロールが噛み合わない／2列グリッドに1件だけ余る／用途不明の空白／再生中でも画面が変わらない</td></tr>
+    </table>
+    <p>中でも大きかったのは、最後の指摘です。<strong>瞑想アプリなのに、瞑想している時間に見る専用の画面がない</strong>。レビューはこれを、最も大きな設計上の空白だと書いていました。</p>
+
+    <h3>改善デザイン案 — 6画面と3つの方針</h3>
+    <p>レビューに続いて、Claude Designは具体的な6画面の案を出しました。配色と情報は現行のまま、<strong>並べ方と出すタイミングだけを変える</strong>案です。方針は3つでした。</p>
+    <ul>
+      <li><strong>開いた瞬間に再生できる</strong>（最初から曲を1つ選んでおき、設定は3行の要約に畳む）</li>
+      <li><strong>説明は畳んで、必要な時に出す</strong>（長い説明は「ⓘ」の奥へ）</li>
+      <li><strong>瞑想中は専用の静かな画面</strong>（残り時間・曲名・終了だけを残す）</li>
+    </ul>
+    <p>6画面は、ホーム、再生中の画面、音楽を選ぶシート、ガンマ、Plus加入済みの状態、重ねる音のシートです。</p>
+
+    <h3>指示書をCodexに渡して実装した</h3>
+    <p>Claude Designは、画面の案に加えて<strong>実装の指示書</strong>も書いていました。全画面に共通する修正（セーフエリア、書体と言語、タブ構成、配色、コントラスト、説明文の扱い）、画面ごとの仕様、実装の優先順、現行の画面から抜き出した色や角丸の値までが入っています。冒頭には、配色・文言・機能は現行を維持し、変えるのはレイアウトと情報を出すタイミングだけ、と書かれていました。</p>
+    <p>この指示書をそのままCodexに渡し、Codexがアプリの画面（HTML・CSS・JavaScript）へ反映しました。1.1.0に入った変更は次のとおりです。</p>
+    <ul>
+      <li><strong>起動した時点で無料曲「Glass Thread」を選んでおき、すぐに「再生する」を押せる</strong>ようにした</li>
+      <li>ホームを、現在のサウンド、再生ボタン、<strong>音楽・重ねる音・時間の3項目の一覧</strong>に整理した。各項目は下から開くシートで変える</li>
+      <li><strong>再生中は、残り時間・曲名・終了ボタンだけの専用画面</strong>に切り替える</li>
+      <li>タブを<strong>「瞑想 / ガンマ / 音の調整 / 記録」の4つ</strong>にし、CHECKは記録タブの中へ移した</li>
+      <li>Gamma画面の警告と説明を短くした</li>
+      <li>Plus加入中は購入価格を出さず、契約の管理ボタンを出す</li>
+      <li>配色をチャコールとアンバーにそろえた</li>
+    </ul>
+    <figure class="before-after">
+      <div class="ba-pair">
+        <div><img src="assets/sound-space-before-playing.jpg" alt="1.0の再生中。曲一覧が表示されたまま、下に停止ボタンがある"><span>1.0</span></div>
+        <div><img src="assets/sound-space-after-playing.jpg" alt="1.1.0の再生中。残り時間と終了ボタンだけの画面"><span>1.1.0</span></div>
+      </div>
+      <figcaption>再生中の画面。1.0は曲一覧のまま停止ボタンが出るだけでしたが、1.1.0では瞑想のための画面に切り替わります。</figcaption>
+    </figure>
+
+    <h3>見た目は変えても、音と課金には触らない</h3>
+    <p>変えたのは画面だけです。<strong>音源、課金の権利判定、iOSのネイティブ再生経路には手を入れていません。</strong>このアプリの価値は、測って担保している音の仕様にあります。指示書の「機能は現行を維持する」という前提は、その点でも都合の良いものでした。反映したあとは、CIのシミュレータで無料曲の選択と再生、Gamma 40の再生を自動で確かめています。</p>
+
+    <h3>iPadにも対応した — 数値ではなく、絵で確かめる</h3>
+    <p>1.1.0ではiPhone専用をやめ、iPadにも対応しました。最初のiPad対応ビルドは、ブラウザで「横にはみ出していないか」を測り、問題なしと判断して作りました。ところが<strong>CIが撮ったiPadの画面を見ると、本文が上に寄って、下半分が真っ黒の空白でした。</strong>はみ出しの数値では見つからない種類の問題です。</p>
+    <p>iPadの大きな画面では本文を縦の中央に寄せるように直し、次のビルドで審査に出しました。Claude Designに実際の画面を見てもらったのと同じで、<strong>デザインの確認は、実際の画面を見て行う</strong>必要がありました。1.1.0は2026年9月12日に審査へ提出し、9月13日に配信されています。</p>
+
     <h2 id="s3">もう一つの機能 — Gamma 40</h2>
-    <p>瞑想サウンドとは別に、<strong>Gamma 40</strong> という独立したタブがあります。40Hzの聴覚刺激だけを鳴らすツールで、作業や読書のあいだに流す想定です。音楽ではありません。</p>
+    <p>瞑想サウンドとは別に、<strong>Gamma 40</strong> という独立した機能があり、「ガンマ」タブに置いています。40Hzの聴覚刺激だけを鳴らすツールで、作業や読書のあいだに流す想定です。音楽ではありません。</p>
     <p>これを別のタブに分けているのには理由があります。「40Hz」を掲げた音源はすでに大量にありますが、その多くが<strong>バイノーラルビート</strong>という方式です。左右の耳にわずかに違う周波数を流し、その差をうなりとして知覚させる方式です。</p>
     <p>ここに問題があります。<strong>左右の周波数差は30Hzを超えると、うなりとして知覚されにくくなります。</strong>つまり40Hzでは方式として成立しにくい。40Hzの聴覚刺激を扱う研究で使われてきたのは、音そのものを毎秒40回強弱させる<strong>振幅変調（アイソクロニック）</strong>のほうです。</p>
-    <p>そして利用者には、手元の音源がどちらの方式なのか、本当に主張どおりの刺激を含んでいるのかを確かめる手段がありません。Gamma 40 と、後述する<a href="#s9">CHECKタブ</a>は、この穴を埋めるために作りました。</p>
+    <p>そして利用者には、手元の音源がどちらの方式なのか、本当に主張どおりの刺激を含んでいるのかを確かめる手段がありません。Gamma 40 と、後述する<a href="#s9">音源チェック</a>は、この穴を埋めるために作りました。</p>
     <p><strong>瞑想サウンドとGamma 40を混ぜられない</strong>ことも、測ってから分かりました。理由は<a href="#s7">作ってから捨てた3つの案</a>で説明します。</p>
 
     <h2 id="s4">なぜネイティブアプリにしたか</h2>
@@ -213,7 +282,7 @@ footer a{color:var(--gold-light)}
     <h3>2. 変調していない音楽を、刺激の横に並べる</h3>
     <p>次に、刺激は刺激として鳴らし、音楽は加工せず横に置く案を試しました。聴くと<strong>脈打つ音が音楽の中の異物として残り</strong>、これも却下です。</p>
     <p>さらに測定で分かったことがありました。<strong>変調していない音を隣に置くと、変調の谷が埋まります。</strong>音楽を7割ほどの音量で混ぜると、実効的な変調深度は100%から26%まで落ち、アプリ自身の検出器ですら40Hzを検出できなくなりました。</p>
-    <p>この2つを捨てた結果、<strong>「刺激と音楽は混ぜない。経路ごと分ける」</strong>という現在の設計になりました。Gammaを独立したタブに置いているのはそのためです。</p>
+    <p>この2つを捨てた結果、<strong>「刺激と音楽は混ぜない。経路ごと分ける」</strong>という現在の設計になりました。Gamma 40を瞑想とは別のタブに置いているのはそのためです。</p>
 
     <h3>3. 強度プリセットを持たせる</h3>
     <p>「やさしい・標準・はっきり」の3段階を用意していましたが、削除しました。採用した音源が<strong>完全に断続する波形</strong>だったため、そこから浅い変調を作れません。選べないものを選べるように見せることになるので、操作自体を消しました。現在変えられるのは再生時間と全体音量だけです。</p>
@@ -230,12 +299,13 @@ footer a{color:var(--gold-light)}
     <p>環境音でもつまずきました。シンギングボウルの音源が、ループの継ぎ目で小さく「チッ」と鳴ったのです。ループの作り方自体は正しく、壊していたのは<strong>AAC符号化</strong>で、ファイルの両端に誤差が出ていました。</p>
     <p>効かなかった対策を先に書きます。<strong>ビットレートを上げても、クロスフェードを伸ばしても、末尾を切り詰めても、継ぎ目は直りませんでした。</strong>効いたのは、符号化する前に<strong>両端を数ミリ秒で無音へ落とすこと</strong>だけでした。</p>
 
-    <h2 id="s9">CHECKタブ — 鳴らすのではなく測る</h2>
+    <h2 id="s9">音源チェック — 鳴らすのではなく測る</h2>
+    <p>記録タブの「音源の周波数を確認する」から使えます。1.0では独立したCHECKタブでしたが、1.1.0でタブを4つに整理した際に記録タブの中へ移しました。</p>
     <p>解析器は、手元の音声ファイルから変調周波数、変調深度、左右の周波数差を計算します。左右差を見るので、アイソクロニックとバイノーラルの<strong>方式の判別</strong>もできます。</p>
     <p>この機能は、素朴な実装を捨てたうえで成立しています。たとえばモノラルに合成してから解析すると、<strong>バイノーラル素材がアイソクロニックと誤判定されます。</strong>左右の音を足すと、和の中に本物のうなりが生じてしまうためです。左右は別々に解析する必要がありました。</p>
     <p>同じように、全帯域をまとめて見ると、倍音どうしのうなりを意図的な変調と誤判定します。帯域を分けて、全帯域に存在することを要求する形にしています。</p>
     <p>検出の限界も測って決め、画面に書いてあります。深度20%以上は確実に検出、10%前後は音楽自体のうねりと区別がつききらないため「弱い」と表示、5%以下は検出できません。</p>
-    <div class="callout"><span class="label">v1.0時点の確認事項</span><p>解析器は既知の参照音源7件で期待結果と一致しています。一方、iOS実機のファイル選択は修正版をビルド16へ入れたものの、最終確認が残っています。そのため、この記事では解析方式の開発記録として紹介し、実機機能の完成を断定しません。</p></div>
+    <div class="callout"><span class="label">実機での確認事項</span><p>解析器は既知の参照音源7件で期待結果と一致しています。一方、iOS実機でのファイル選択は、修正を入れた後の最終確認が残っています。そのため、この記事では解析方式の開発記録として紹介し、実機機能の完成を断定しません。</p></div>
 
     <h2 id="s10">無料とPlusの線引き</h2>
     <p>ここは長く迷いました。結論はこうです。</p>
@@ -244,7 +314,7 @@ footer a{color:var(--gold-light)}
     <p>課金の根拠はコスト構造とも一致しました。合成音の配信コストは小さい一方、<strong>BGMの制作・評価・権利記録・追加には継続的な費用と作業が伴います。</strong>既存の全曲と今後追加する曲を提供することを、Plusの継続的な価値としました。</p>
     <table>
       <tr><th>無料</th><th>SOUND SPACE Plus（月額480円 / 年額3,600円）</th></tr>
-      <tr><td>Gamma 40（時間無制限）、CHECKタブ、各カテゴリ1曲、雨、波、うなり、記録</td><td>全20曲と今後追加される楽曲、川・森・焚き火・シンギングボウル・約528Hzチャイム、詳細調整、プリセットの無制限保存</td></tr>
+      <tr><td>Gamma 40（時間無制限）、音源チェック、各カテゴリ1曲、雨、波、うなり、記録</td><td>全20曲と今後追加される楽曲、川・森・焚き火・シンギングボウル・約528Hzチャイム、詳細調整、プリセットの無制限保存</td></tr>
     </table>
 
     <p>音楽を完全に閉じないことも意図的です。無料版が「合成音だけ鳴るアプリ」だと、利用者は自分が何を買おうとしているのか分からないまま判断することになります。<strong>無料で数曲聴けて「Plusでは全20曲と今後の追加曲を使える」と分かる状態</strong>が、購入前に内容を確かめやすい形だと考えました。</p>
@@ -254,7 +324,7 @@ footer a{color:var(--gold-light)}
     <table>
       <tr><th>有料にしないもの</th><th>理由</th></tr>
       <tr><td><strong>精度</strong></td><td>「Plusだと正確な40Hz」は絶対にやりません。無料版が不正確だと自ら認めることになり、このアプリ唯一の主張が崩れます</td></tr>
-      <tr><td><strong>CHECKタブ</strong></td><td>検証機能を有料にすると「検証されたくない」と読まれます。信頼の証明そのものなので開けておきます</td></tr>
+      <tr><td><strong>音源チェック</strong></td><td>検証機能を有料にすると「検証されたくない」と読まれます。信頼の証明そのものなので開けておきます</td></tr>
       <tr><td><strong>広告</strong></td><td>瞑想アプリとして論外なだけでなく、<strong>実測上も破綻します</strong></td></tr>
     </table>
     <p>3つ目は補足が必要です。<a href="#s7">先ほどの測定</a>のとおり、変調されていない音を刺激の横に置くと谷が埋まります。広告音声はまさにそれで、鳴っているあいだ刺激が成立しません。広告は理念の問題ではなく、<strong>この製品では技術的に両立しない</strong>という話でした。</p>
@@ -346,13 +416,14 @@ footer a{color:var(--gold-light)}
     <p>開発が集中した数日で枠を使い切り、審査対応が数日止まりました。原因は<strong>ソースを変更するたびに自動でビルドが走る設定</strong>にしていたことです。Webサービスなら妥当な設定ですが、iOSでは高すぎました。現在は手動実行のみに変え、ビルドは「出すとき」だけ回しています。</p>
 
     <h2 id="s14">会話ではなく、リポジトリを中心にAIと協働する</h2>
-    <p>Claude CodeとCodexに、設計担当・実装担当という固定の役割は決めませんでした。どちらもコードの調査、実装、音源の測定、文章作成、審査対応を担い、その時点の課題に応じて作業しました。利用上限をきっかけに作業環境を切り替える場面は実際に何度もありましたが、そこで終わらず、<strong>一方の成果をもう一方がコードと測定結果から再確認する</strong>流れが自然に生まれました。</p>
+    <p>役割がはっきり分かれていたのは<strong>Claude Design</strong>です。画面のレビュー、改善デザイン案、実装の指示書までを任せ、その指示書をもとにCodexが実装しました。一方、Claude CodeとCodexの間には固定の役割を決めませんでした。どちらもコードの調査、実装、音源の測定、文章作成、審査対応を担い、その時点の課題に応じて作業しました。利用上限をきっかけに作業環境を切り替える場面は実際に何度もありましたが、そこで終わらず、<strong>一方の成果をもう一方がコードと測定結果から再確認する</strong>流れが自然に生まれました。</p>
     <p>この運用の核はAIの使い分けではなく、<strong>開発の文脈を一つの会話に閉じ込めないこと</strong>です。測定値、採用・不採用の理由、App Store審査の経緯、次に確認する項目をリポジトリへ残しました。別の環境から始めても、会話の要約を信じるだけでなく、Gitの履歴と実ファイルをたどって先行作業を検証できます。</p>
     <table>
       <tr><th>協働の仕組み</th><th>役割</th></tr>
       <tr><td>リポジトリ</td><td>コード、音源、評価結果、公開用ファイルを一つの正本として管理</td></tr>
       <tr><td>引継ぎ文書</td><td>決定事項、失敗した案、再現手順、審査状況、未確認事項を外部化</td></tr>
       <tr><td>相互レビュー</td><td>先に行われた実装や説明を、別のAIがコード・ブラウザ・測定値から再検証</td></tr>
+      <tr><td>デザイン</td><td>Claude Designに実際の画面のスナップショットを見せてレビューを受け、改善案と実装の指示書を作る</td></tr>
       <tr><td>人の判断</td><td>音の最終試聴、iPhone実機確認、課金操作、公開判断を担当</td></tr>
     </table>
     <p>AIを交代できても、人にしかできない確認は残りました。特に外せなかったのが<strong>試聴</strong>です。測定値が基準を満たした素材が、聴くと使えないことが何度もありました。逆に、聴いて良いと思った音が測ると成立していないこともありました。<strong>音楽の採否は測定では決まりません。</strong></p>
@@ -380,7 +451,7 @@ footer a{color:var(--gold-light)}
       <li>音源再生、記録、解析に独自サーバー通信を使いません。広告、アクセス解析、トラッキングもありません。購入と復元だけはAppleのStoreKitを利用します</li>
       <li>音源はすべて同梱で、実行時に取得しません。音源再生・記録・解析は機内モードでも動きます</li>
       <li>記録は端末内にのみ保存されます</li>
-      <li>音声処理と解析はすべて端末上で行われます。CHECKタブに渡したファイルが送信されることはありません</li>
+      <li>音声処理と解析はすべて端末上で行われます。音源チェックに渡したファイルが送信されることはありません</li>
       <li>環境音はすべてCC0素材で、出典・作者・ライセンスを記録し、アプリ内にも表示しています</li>
       <li>医療機器ではありません。診断・治療・予防・効果測定を目的としません</li>
     </ul>
@@ -388,19 +459,22 @@ footer a{color:var(--gold-light)}
     <h2 id="s17">公開状況とこれから</h2>
     <table>
       <tr><th>項目</th><th>状態</th></tr>
-      <tr><td>バージョン</td><td>1.0（ビルド16）</td></tr>
-      <tr><td>審査</td><td>2026年9月10日 承認</td></tr>
+      <tr><td>バージョン</td><td>1.1.0（ビルド20）</td></tr>
+      <tr><td>最新の配信</td><td>2026年9月13日</td></tr>
+      <tr><td>初回の審査</td><td>2026年9月10日 承認</td></tr>
       <tr><td>配信地域</td><td>日本のみ</td></tr>
-      <tr><td>対応デバイス</td><td>iPhone</td></tr>
+      <tr><td>対応デバイス</td><td>iPhone、iPad</td></tr>
       <tr><td>収録音源</td><td>BGM 20曲、環境音7層（92MB）</td></tr>
     </table>
+    <p>App Storeの掲載文も直しました。1.0の説明文は、審査で「環境音を重ねるだけのアプリ」と読まれないよう40Hzから書き始めていましたが、承認後の1.0.1で、売りである自分だけの瞑想サウンドづくりを先頭に戻しました。</p>
     <p>これからやることは、BGMの追加が中心です。Plusの説明に「今後追加される楽曲」と書いてあるので、書いた以上は続けます。あわせて、音源の測定値が変わっていないかの回帰確認をCIに載せる予定です。これはmacOSを使わずLinuxで回せるので、費用がかかりません。</p>
 
     <h2 id="s18">まとめ</h2>
-    <p>iOSアプリを作ったことがなく、Macも持っていない状態から公開まで来て、わかったことが3つありました。</p>
+    <p>iOSアプリを作ったことがなく、Macも持っていない状態から公開まで来て、わかったことが4つありました。</p>
     <p><strong>1つ目は、Macがなくても出せることです。</strong>GitHub Actionsで数分だけMacを借りれば足ります。ただし課金の数え方がLinuxと違うので、そこだけは先に理解しておく必要がありました。</p>
     <p><strong>2つ目は、審査の往復を前提に組むことです。</strong>2度の差し戻しは、追加情報の不足と購入条件の表示不備でした。どちらも原因を分け、資料と画面を直せる種類のものでした。</p>
     <p><strong>3つ目は、AIに任せられる範囲がはっきりしていたことです。</strong>実装、測定、文章、審査対応はかなり速くできます。しかし<strong>「この音を使うかどうか」は、人が聴いて決めるしかありませんでした。</strong>Suno AIの生成でも同じで、プロンプトを工夫しても歩留まりは上がらず、数を作って聴いて選ぶしかありませんでした。</p>
+    <p><strong>4つ目は、画面は出してから直すと、直すべき点が見えることです。</strong>公開版を操作した画面のスナップショットをClaude Designに見てもらうと、機能を足した順に積み上がっていた画面の課題が、優先度つきで並びました。その指示書をCodexが実装し、画面は使う順に並び直りました。そしてiPadの空白のように、<strong>見た目の確認は数値ではなく、実際の画面を見て行う</strong>必要がありました。</p>
     <p>このアプリで一番時間を使ったのは、実装ではなく<strong>作ったものを測って捨てること</strong>でした。音楽に40Hzを掛ける案、刺激の横に音楽を並べる案、強度を3段階にする案、合成で環境音を作る案。どれも作ってから捨てています。捨てた判断はすべて、聴感か測定値のどちらか、あるいは両方に基づいています。</p>
     <div class="cta-row">
       <a href="https://apps.apple.com/jp/app/id6806597979">App StoreでSOUND SPACEを見る</a>
@@ -412,13 +486,14 @@ footer a{color:var(--gold-light)}
     <strong>CONTENTS</strong>
     <a href="#s1">はじめに — iOSは初めてでした</a>
     <a href="#s2">何を作ったか — 瞑想サウンドを作る</a>
+    <a href="#design">画面は Claude Design で作り直した</a>
     <a href="#s3">もう一つの機能 — Gamma 40</a>
     <a href="#s4">なぜネイティブアプリにしたか</a>
     <a href="#s5">生成AIでBGM候補を作る</a>
     <a href="#s6">環境音は実録に置き換えた</a>
     <a href="#s7">作ってから捨てた3つの案</a>
     <a href="#s8">固定した音源と、測っている値</a>
-    <a href="#s9">CHECKタブ</a>
+    <a href="#s9">音源チェック</a>
     <a href="#s10">無料とPlusの線引き</a>
     <a href="#s11">日本市場の法規制</a>
     <a href="#s12">技術構成</a>
@@ -433,7 +508,7 @@ footer a{color:var(--gold-light)}
 </div>
 
 <footer>
-  <p>SOUND SPACE · 2026年9月10日</p>
+  <p>SOUND SPACE · 2026年9月13日</p>
   <p><a href="./">サポート</a> · <a href="privacy.html">プライバシーポリシー</a> · <a href="terms.html">利用規約</a></p>
 </footer>
 
