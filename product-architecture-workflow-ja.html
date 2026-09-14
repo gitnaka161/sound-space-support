@@ -79,6 +79,10 @@ h1{max-width:920px; margin:0; font-size:clamp(2rem,5.6vw,4.3rem); font-weight:50
 .callout{margin:1.7rem 0; padding:18px 22px; background:#fbf6ea; border:1px solid #e3d5ae; border-radius:12px}
 .callout p{margin:0}
 .callout .label{display:block; margin-bottom:6px; color:var(--warn); font-size:.78rem; letter-spacing:.1em; font-weight:600}
+.selection-flow{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin:1.7rem 0; padding:0; list-style:none; counter-reset:selection-step}
+.selection-flow li{position:relative; margin:0; padding:42px 15px 16px; background:#f3f6f5; border:1px solid #cfdbd9; border-radius:12px; font-size:.87rem; line-height:1.75; counter-increment:selection-step}
+.selection-flow li::before{content:"0" counter(selection-step); position:absolute; top:13px; left:15px; color:var(--gold); font-family:Georgia,"Times New Roman",serif; font-size:.78rem; letter-spacing:.08em}
+.selection-flow strong{display:block; margin-bottom:5px; color:var(--teal)}
 figure{margin:1.9rem 0}
 figure svg{width:100%; height:auto; display:block; background:#fbfaf5; border:1px solid var(--line); border-radius:12px}
 figure img{width:100%; height:auto; display:block; border:1px solid var(--line); border-radius:12px}
@@ -117,6 +121,7 @@ footer a{color:var(--gold-light)}
   .article{padding:8px 18px 34px; border-radius:14px}
   .hero-grid{grid-template-columns:1fr}
   .hero-icon{width:104px; height:104px; border-radius:24px; order:-1}
+  .selection-flow{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -288,7 +293,15 @@ footer a{color:var(--gold-light)}
     </div>
     <p>3種類のプロンプトで10曲を作って測ったところ、プロンプト間の差はごく小さく、<strong>同じプロンプトで作った曲どうしのばらつきのほうが、はるかに大きい</strong>という結果になりました。煌めきを求める語を足しても、高域はほとんど動きませんでした。</p>
     <p>あとから分かった構造的な失敗もあります。<strong>煌めきを担う楽器（ボウル・鐘・チャイム）を全部禁止したまま、煌めきを求めていた</strong>のです。それらはアプリ側で別レイヤーとして重ねる設計だったので、プロンプトからは外していました。</p>
-    <p>結論として、生成の歩留まりはプロンプトでは上がりませんでした。<strong>数を作って、人が聴いて選ぶ</strong>しかありませんでした。採否は測定では決めず、実際に試聴した記録がないものは採用しない運用にしています。</p>
+    <h3>AIで測って絞り、人が聴いて決める</h3>
+    <p>候補が増えると、すべてを同じ密度で聴き比べるのは現実的ではありません。そこで解析スクリプトを作り、<strong>AIと一緒に、先に確認すべき曲と箇所を絞り込む工程</strong>を入れました。</p>
+    <ol class="selection-flow">
+      <li><strong>自動測定</strong>音割れ、無音、5秒ごとの起伏、急な音量変化、帯域の偏り、スマートフォンでの聞こえやすさ、ループの継ぎ目を測る</li>
+      <li><strong>AIで整理</strong>測定値と警告をまとめ、100点からの減点を参考値として、先に聴く曲と確認箇所を並べる</li>
+      <li><strong>人が試聴</strong>曲全体の心地よさ、展開、音色、候補どうしの違いを聴き、採用・保留・不採用を決める</li>
+    </ol>
+    <p>ここで測っているのは、音割れや大きすぎる起伏のような<strong>数値にできるリスク</strong>です。AIが数値だけで「瞑想に適した曲」と決めたわけではありません。たとえば音量の起伏が大きい曲には「展開を重点試聴」と印を付け、上位候補を人がA/Bで聴き比べました。測定値は足切りではなく、聴くべき点を見落とさないための補助です。</p>
+    <p>結論として、生成の歩留まりはプロンプトだけでは上がりませんでした。<strong>数を作り、AIで測って候補を絞り、最後は人が聴いて選ぶ</strong>という流れに落ち着きました。実際に試聴した記録がないものは採用しない運用にしています。</p>
     <p>なお収録BGMは、音質を優先して<strong>再圧縮も正規化もせず原音のまま再生</strong>しています。</p>
 
     <h2 id="s6">環境音は実録に置き換えた</h2>
