@@ -123,6 +123,12 @@ footer a{color:var(--gold-light)}
   .hero-icon{width:104px; height:104px; border-radius:24px; order:-1}
   .selection-flow{grid-template-columns:1fr}
 }
+.install{display:flex; align-items:center; gap:16px; margin:1.6rem 0 .5rem; padding:14px 16px; max-width:470px;
+  background:#fbfaf5; border:1px solid var(--line); border-radius:16px}
+.install img{width:104px; height:104px; border:0; border-radius:8px}
+.install div{font-family:"Hiragino Sans","Yu Gothic",sans-serif; font-size:.82rem; color:var(--muted); line-height:1.7}
+.install strong{display:block; color:var(--ink); font-size:.95rem}
+@media (max-width:720px){.install{display:none}}
 </style>
 </head>
 <body>
@@ -150,6 +156,14 @@ footer a{color:var(--gold-light)}
     <h2 id="s1">はじめに — iOSは初めてでした</h2>
     <p>エンジニアではありますが、iOSアプリを作ったことは一度もありませんでした。開発機はWindowsで、Macは持っていません。Xcodeも触ったことがない状態からのスタートです。</p>
     <p>その状態で、音を扱うアプリをApp Storeへ届けました。<strong>2度差し戻され、3回目の審査で承認されています。</strong>その後、<strong>Claude Designのレビューと提案をもとに画面を作り直した1.1.0</strong>を、iPad対応とあわせて配信しました。現在の最新版は1.1.1です。この記事は、何を作り、何を作ってから捨て、どこでつまずいたかの記録です。</p>
+
+    <div class="cta-row">
+      <a href="https://apps.apple.com/jp/app/id6806597979">App StoreでSOUND SPACEを見る</a>
+    </div>
+    <div class="install">
+      <img src="assets/app-store-qr.svg" alt="App StoreのSOUND SPACEのページを開くQRコード" width="108" height="108">
+      <div><strong>スマホで開く</strong>iPhoneのカメラでこのQRコードを読み取ると、App Storeのページが開きます。</div>
+    </div>
     <p>使った道具と、それぞれに任せたことは次のとおりです。</p>
     <table>
       <tr><th>道具</th><th>担当したこと</th></tr>
@@ -519,6 +533,10 @@ footer a{color:var(--gold-light)}
     <p>このアプリで一番時間を使ったのは、実装ではなく<strong>作ったものを測って捨てること</strong>でした。音楽に40Hzを掛ける案、刺激の横に音楽を並べる案、強度を3段階にする案、合成で環境音を作る案。どれも作ってから捨てています。捨てた判断はすべて、聴感か測定値のどちらか、あるいは両方に基づいています。</p>
     <div class="cta-row">
       <a href="https://apps.apple.com/jp/app/id6806597979">App StoreでSOUND SPACEを見る</a>
+    </div>
+    <div class="install">
+      <img src="assets/app-store-qr.svg" alt="App StoreのSOUND SPACEのページを開くQRコード" width="108" height="108">
+      <div><strong>スマホで開く</strong>iPhoneのカメラでこのQRコードを読み取ると、App Storeのページが開きます。</div>
     </div>
 
   </article>

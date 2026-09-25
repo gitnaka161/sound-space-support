@@ -140,6 +140,13 @@ th, td { padding: 9px 12px; text-align: left; vertical-align: top; border-bottom
 code { padding: 1px 5px; background: #f0ece0; border: 1px solid var(--line); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .92em; }
 blockquote { margin: 20px 0; padding: 14px 18px; background: #f0ece0; border: 1px solid var(--line); }
 
+/* インストール用のQRコード。スマホからはリンクを押せば済むので、狭い画面では隠す */
+.install { margin-top: 30px; display: flex; align-items: center; gap: 18px; padding: 16px 18px; max-width: 470px; background: var(--panel); border: 1px solid var(--line); border-radius: 18px; }
+.install img { width: 108px; height: 108px; border-radius: 10px; }
+.install div { font-size: .82rem; color: var(--muted); }
+.install strong { display: block; color: var(--ink); font-size: .95rem; }
+@media (max-width: 720px) { .install { display: none; } }
+
 @media (max-width: 860px) {
   .site-nav { display: none; }
   .hero { min-height: auto; grid-template-columns: 1fr; gap: 52px; padding-top: 128px; }
