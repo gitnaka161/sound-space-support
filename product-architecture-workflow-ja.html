@@ -89,7 +89,10 @@ figure img{width:100%; height:auto; display:block; border:1px solid var(--line);
 figcaption{margin-top:10px; color:var(--muted); font-family:"Hiragino Sans","Yu Gothic",sans-serif; font-size:.82rem; line-height:1.7}
 .screen-gallery{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin:1.8rem 0}
 .screen-gallery figure{margin:0}
-.screen-gallery img{width:100%; display:block; border:1px solid var(--line); border-radius:14px; box-shadow:0 8px 22px rgba(20,30,34,.10)}
+/* 端末画面はどの画面幅でも同じ大きさにする。列が2つに減ったときに
+   1枚あたりが倍近くまで伸び、縦に長くなりすぎていた */
+.screen-gallery img{width:100%; max-width:175px; height:auto; margin:0 auto; display:block;
+  border:1px solid var(--line); border-radius:14px; box-shadow:0 8px 22px rgba(20,30,34,.10)}
 .screen-gallery figcaption{text-align:center; font-size:.74rem}
 .before-after .ba-pair{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; max-width:360px; margin:0 auto}
 .before-after .ba-pair div{position:relative}
