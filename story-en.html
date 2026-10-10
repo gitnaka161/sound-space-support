@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Building SOUND SPACE on Windows with AI | SOUND SPACE</title>
+  <meta name="description" content="How a first iOS app was designed, built and shipped to the App Store from a Windows PC, with Suno AI for music, Claude Design for UI review, Claude Code and Codex for implementation, and GitHub Actions for builds.">
+  <meta name="apple-itunes-app" content="app-id=6806597979">
+  <meta property="og:title" content="Building SOUND SPACE on Windows with AI">
+  <meta property="og:description" content="No Mac, no prior iOS experience. What worked, what was measured, and what was thrown away.">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:image" content="https://gitnaka161.github.io/sound-space-support/assets/sound-space-icon.png">
+  <link rel="canonical" href="https://gitnaka161.github.io/sound-space-support/story-en.html">
+  <link rel="alternate" hreflang="ja" href="https://gitnaka161.github.io/sound-space-support/product-architecture-workflow-ja.html">
+  <link rel="alternate" hreflang="en" href="https://gitnaka161.github.io/sound-space-support/story-en.html">
+  <link rel="icon" href="assets/sound-space-icon.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main>
+  <h1>Building SOUND SPACE on Windows, with AI</h1>
+  <p class="lead">A first iOS app, written on a Windows PC without a Mac, and shipped to the App Store. This is a short account of what was built, what was measured, and what was thrown away.</p>
+
+  <div class="install">
+    <img src="assets/app-store-qr.svg" alt="QR code that opens the SOUND SPACE page on the App Store" width="108" height="108">
+    <div><strong>Open on iPhone or iPad</strong>Scan with the camera to open the App Store page.
+      <a class="store-badge" href="https://apps.apple.com/app/id6806597979"><img class="badge" src="assets/appstore-badge-ja.svg" alt="Download on the App Store" width="131" height="48"></a></div>
+  </div>
+
+  <h2>What the app does</h2>
+  <p>SOUND SPACE plays meditation music and lets you layer recorded ambient sound over it: rain, waves, a river, a forest, a campfire, a singing bowl, a wind chime measured at 526.6 Hz, and a binaural beat. You pick one tone and one ambient sound, set a length, and start. The music is never processed — layers are added beside it.</p>
+  <p>A second, separate mode called Gamma 40 plays a fixed stimulus tone, measured at 39.999 Hz with 100% modulation depth. It is a standalone tool, not music, and it is never mixed with the meditation tracks.</p>
+
+  <h2>Two measurements decided the architecture</h2>
+  <p>Amplitude modulation at 40 Hz sits in the auditory roughness band, so modulating music at that rate always sounds gritty. No parameter avoided it. Placing an unmodulated track <em>beside</em> the modulated bed was tried next and measured worse: with music at 70% of the mix, the app's own analyzer could no longer detect the 40 Hz at all, because unmodulated sound fills the troughs.</p>
+  <p>So the two ideas were separated into two modes instead of being blended. Binaural beats are used below 30 Hz, amplitude modulation above it, because a binaural beat stops being perceived as a beat at higher rates. The app shows which method it chose and why.</p>
+  <p>Nothing here is a health claim. The app is not a medical device, and no specific effect is guaranteed.</p>
+
+  <h2>Where AI helped, and where it could not</h2>
+  <ul>
+    <li><strong>Music (Suno AI).</strong> Twenty tracks were generated under a paid plan. Prompt wording turned out to matter less than expected: the spread between prompts was about 12–15 Hz of spectral centroid, while the spread <em>within</em> one prompt was 91 Hz. Generating many takes and listening beat refining the prompt.</li>
+    <li><strong>UI review (Claude Design).</strong> Screenshots of the shipped 1.0 were reviewed and returned as a prioritized list of problems with a written spec. That spec became version 1.1.0: a dedicated playing screen, four tabs instead of five, and a calmer palette.</li>
+    <li><strong>Implementation (Claude Code and Codex).</strong> Audio measurement, the App Store submission scripts, the iOS bridge, and the release automation.</li>
+    <li><strong>Builds (GitHub Actions).</strong> No Mac was ever used. macOS runners are billed at ten times the rate of Linux, which is the single most important thing to know before automating iOS builds.</li>
+    <li><strong>What AI could not do.</strong> Choosing which track to ship. Every candidate was listened to by a person; measurement narrowed the field but never decided it.</li>
+  </ul>
+
+  <h2>App Review</h2>
+  <p>The first version was rejected twice: once for missing information, once because the free-trial terms were not shown clearly enough on the purchase screen. Both were fixable by separating the cause from the symptom and rewriting the screen and the notes. The third submission was approved.</p>
+
+  <h2>What shipped</h2>
+  <ul>
+    <li><strong>1.1.0</strong> — the redesigned screens, plus iPad support.</li>
+    <li><strong>1.1.1</strong> — a fix for the binaural layer, which was selected in the UI but silently not generated on the native playback path.</li>
+    <li><strong>1.2.0</strong> — English, and distribution in the United States, United Kingdom, Canada, Australia, New Zealand and Singapore alongside Japan.</li>
+  </ul>
+
+  <p>The full account, with the measurements and the dead ends in detail, is written in Japanese.</p>
+
+  <nav><a href="index-en.html">Support</a><a href="product-architecture-workflow-ja.html" lang="ja">日本語の全文</a><a href="https://apps.apple.com/app/id6806597979">App Store</a></nav>
+</main>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"TechArticle",
+"headline":"Building SOUND SPACE on Windows, with AI",
+"description":"How a first iOS app was designed, built and shipped to the App Store from a Windows PC, using Suno AI, Claude Design, Claude Code, Codex and GitHub Actions.",
+"inLanguage":"en","datePublished":"2026-10-10",
+"author":{"@type":"Person","name":"Kunitomi Katakawa"},
+"mainEntityOfPage":"https://gitnaka161.github.io/sound-space-support/story-en.html",
+"about":{"@type":"SoftwareApplication","name":"SOUND SPACE - Meditate & Focus",
+"operatingSystem":"iOS, iPadOS","applicationCategory":"HealthApplication",
+"url":"https://apps.apple.com/app/id6806597979"}}
+</script>
+</body>
+</html>
